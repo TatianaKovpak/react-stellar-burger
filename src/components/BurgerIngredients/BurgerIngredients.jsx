@@ -3,10 +3,10 @@ import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 
-function BurgerIngredients ({props}) {
-    const bun = props.filter( i => i.type === 'bun');
-    const sauce = props.filter( i => i.type === 'sauce');
-    const main = props.filter(i => i.type === 'main')
+function BurgerIngredients ({ingredients}) {
+    const bun = ingredients.filter( i => i.type === 'bun');
+    const sauce = ingredients.filter( i => i.type === 'sauce');
+    const main = ingredients.filter(i => i.type === 'main')
 
 
 
@@ -79,7 +79,7 @@ const IngredientContainer = ({arr}) => {
 
  BurgerIngredients.propTypes ={
    
-   props: PropTypes.arrayOf(ingredientPropType).isRequired
+    ingredients: PropTypes.arrayOf(ingredientPropType).isRequired
     
   
  }

@@ -14,8 +14,8 @@ function App() {
 
       <AppHeader/>
       <main className={styles.main}>
-        <BurgerIngredients props={data}/>
-        <BurgerConstructor props={data}/>
+        <BurgerIngredients ingredients={data}/>
+        <BurgerConstructor ingredients={data}/>
       </main>
       
   

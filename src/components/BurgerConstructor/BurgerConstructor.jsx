@@ -3,9 +3,9 @@ import BurgerConstructorStyles from './BurgerConstructor.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 
-function BurgerConstructor ({props}) {
-    const filling = props.filter(i => i.type !== 'bun')
-    const bun = props.filter(i => i.name ===  'Краторная булка N-200i')
+function BurgerConstructor ({ingredients}) {
+    const filling = ingredients.filter(i => i.type !== 'bun')
+    const bun = ingredients.filter(i => i.name ===  'Краторная булка N-200i')
    
 
     return(
@@ -96,7 +96,7 @@ const BurgerBunBottom = ({arr}) => {
 
 BurgerConstructor.propTypes ={
    
-    props: PropTypes.arrayOf(ingredientPropType).isRequired
+    ingredients: PropTypes.arrayOf(ingredientPropType).isRequired
      
    
   }
