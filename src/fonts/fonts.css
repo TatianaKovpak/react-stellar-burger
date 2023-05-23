@@ -1,0 +1,41 @@
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("./JetBrainsMono/JetBrainsMono-Medium.woff") format("woff");
+    font-style: normal;
+    font-weight: 400;
+  }
+  
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("./JetBrainsMono/JetBrainsMono-Medium.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+  }
+  
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("./JetBrainsMono/JetBrainsMono-Bold.woff") format("woff");
+    font-style: normal;
+    font-weight: 700;
+  }
+  
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("./JetBrainsMono/JetBrainsMono-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+  }
+  
+  @font-face {
+    font-family: "Iceland";
+    src: url("./Iceland/Iceland-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+  }
+  
+  @font-face {
+    font-family: "Iceland";
+    src: url("./Iceland/Iceland-Regular.woff") format("woff");
+    font-style: normal;
+    font-weight: 400;
+  }
