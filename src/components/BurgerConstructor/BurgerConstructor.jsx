@@ -4,6 +4,7 @@ import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import ModalOverlay from '../ModalOverlay/ModalOverlay';
+import Modal from '../Modal/Modal';
 
 
 
@@ -45,7 +46,7 @@ function BurgerConstructor ({ingredientsApi, state}) {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <ModalOverlay active={modalActive} modalProp = {modalProp}  setActive={setModalActive}/>
+                <Modal active={modalActive} modalProp = {modalProp}  setActive={setModalActive}/>
                     
               
             </div>

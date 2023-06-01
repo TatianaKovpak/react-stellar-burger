@@ -4,6 +4,7 @@ import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import { useEffect, useState } from "react";
+import {getIngredients} from "../../utils/api-burger";
 
 
 const url = 'https://norma.nomoreparties.space/api/ingredients';
@@ -15,9 +16,7 @@ function App() {
   const state = {}
 
   useEffect(async () => {
-  
-    fetch(url)
-      .then(res=> res.json())
+      getIngredients()
       .then(data => setIngredients(data.data))
       .catch(e => console.log(e))
   }, [])

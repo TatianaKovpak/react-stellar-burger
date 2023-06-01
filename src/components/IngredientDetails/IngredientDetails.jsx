@@ -1,6 +1,7 @@
 
 import PropTypes from "prop-types";
 import IngredientDetailsStyles from './IngredientDetails.module.css'
+import { ingredientPropType } from "../../utils/prop-types";
 
 
 function IngredientDetails({ingredient}) {
@@ -40,8 +41,8 @@ function IngredientDetails({ingredient}) {
     )
 }
 
-IngredientDetails.propTypes ={
-    ingredient: PropTypes.object
+IngredientDetails.propTypes = {
+    ingredient: ingredientPropType
  }
 
 

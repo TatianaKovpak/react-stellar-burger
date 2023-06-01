@@ -1,8 +1,12 @@
 .modal {
+ display: none;
+}
+
+.modal__active {
     width: 720px;
     height: max-content;
     background-color: #1C1C21;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     left: 0;
@@ -14,6 +18,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 1;
 }
 
 
