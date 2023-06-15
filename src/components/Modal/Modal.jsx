@@ -35,7 +35,7 @@ function Modal ({active, setActive, modalProp}) {
                 <div className={active ? ModalStyles.modal__active : ModalStyles.modal} >
                     
                     <button className={ModalStyles.close__icon} onClick={closeModal}></button>   
-                    {modalProp.btn !== 'ingredient' ? <OrderDetails /> : <IngredientDetails  ingredient = {modalProp.props} />}
+                    {modalProp.btn !== 'ingredient' ? <OrderDetails /> :  <IngredientDetails  ingredient = {modalProp.props} />}
                     
                 </div>
                 <ModalOverlay setActive={setActive} active={active}/>
