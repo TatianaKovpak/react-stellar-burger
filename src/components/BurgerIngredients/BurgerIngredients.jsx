@@ -46,17 +46,17 @@ const IngredientContainer = ({arr, state}) => {
     <div className={BurgerIngredientsStyles.ingredient_container}>
         {arr.map(i => {
             return (
-                
-                <Ingredient state={state} props={i} key={uuid()} /> 
-               
-            )
+             <Ingredient state={state} props={i} key={i._id} /> 
+            )   
         })}
     </div>
    )
 }
 
  const Ingredient = ({props, state}) => {
+   
     const {addedIngredient} = React.useContext(IngredientContext)
+
     function editModalWindow () {
         state.setModalProp({
             btn: 'ingredient',
@@ -114,10 +114,12 @@ const IngredientContainer = ({arr, state}) => {
         </>
     )
  }
- BurgerIngredients.propTypes ={
-   /* IngredientContext: PropTypes.arrayOf(ingredientPropType).isRequired,*/
+ BurgerIngredients.propTypes = {
     state: PropTypes.object
  } 
 
+ Ingredient.propTypes = {
+    props: ingredientPropType
+ }
 
 export default BurgerIngredients

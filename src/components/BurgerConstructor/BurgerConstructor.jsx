@@ -136,7 +136,7 @@ const BurgerBunBottom = ({arr}) => {
     )
 }
 BurgerConstructor.propTypes ={
-    /*ingredients: PropTypes.arrayOf(ingredientPropType).isRequired,*/
+    
     state: PropTypes.object
   }
 

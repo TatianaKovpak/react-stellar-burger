@@ -7,14 +7,22 @@ function OrderDetails () {
     const {addedIngredient} = React.useContext(IngredientContext)
     const [orderCode, setOrderCode] = useState('')
 
-    useEffect(async () => {
+  
+
+    useEffect(() => {
+        const awaitPost = async () => {
+            postOrder(addedIngredient.map(i => i._id))
+            .then(res => {
+                const {order} = res
+                setOrderCode(order.number)
+             })
+             
+        }
         if(addedIngredient.length > 0) {
-          postOrder(addedIngredient.map(i => i._id))
-          .then(res => {
-             const {order} = res
-             setOrderCode(order.number)
-          }).catch(e => console.log(e))
-      }
+         awaitPost()
+         .catch(e => console.log(e))
+        }
+        
     }, [addedIngredient])
 
     return (

@@ -9,37 +9,32 @@ import { IngredientApiContext, IngredientContext } from "../../services/ingredie
 
 
 function App() {
- const [addedIngredient, setAddedIngredient] = useState([])
-
-console.log(addedIngredient)
-
+  const [addedIngredient, setAddedIngredient] = useState([])
   const [ingredients, setIngredients] = useState([])
-  
 
   const state = {}
 
-  useEffect(async () => {
+  useEffect(() => {
+
+    const awaitIngredients = async () => {
       getIngredients()
       .then(data => setIngredients(data.data))
+    }
+      awaitIngredients()
       .catch(e => console.log(e))
-      
   }, [])
 
   return (
-      <div className={styles.app}>
+    <div className={styles.app}>
         <AppHeader/>
       <main className={styles.main}>
-      
         <IngredientApiContext.Provider value={{ingredients, setIngredients}}>
           <IngredientContext.Provider value={{addedIngredient, setAddedIngredient}}>
             <BurgerIngredients state={state} /> 
             <BurgerConstructor state={state} />
           </IngredientContext.Provider>
         </IngredientApiContext.Provider>
-        
       </main>
-      
-  
     </div>
   );
 }
