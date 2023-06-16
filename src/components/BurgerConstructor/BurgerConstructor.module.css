@@ -1,0 +1,68 @@
+.section {
+    width: 600px;
+    height: 912px;
+   
+    align-self: center;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    
+    
+  }
+
+  .burger__constructor {
+    height: 464px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+    row-gap: 16px;
+  }
+
+  .burger__element {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 568px;
+    height: 80px;
+    position: relative;
+  }
+
+  .burger__element_top {
+    margin-top: 84px;
+  }
+
+  .burger__element_icon {
+    
+    position: absolute;
+    top: 28px;
+    left: 0;
+  }
+
+  .sum {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   width: 119px;
+
+  }
+  .sum__icon {
+    margin-left: 9px;
+    display: flex;
+    align-items: center;
+  }
+
+  .sum__container {
+    width: 374px;
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 40px;
+    margin-right: 16px;
+  }
+
+  

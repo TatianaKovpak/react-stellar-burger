@@ -1,0 +1,21 @@
+.image {
+    background-image: url(../../../public/images/done.svg);
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    margin: 60px 0 0 0;
+}
+
+
+.title {
+    margin: 80px 0 0 0;
+}
+
+.subtitle {
+    margin: 32px 0 0 0;
+    font-weight: 700;
+}
+
+.text {
+    margin: 60px 0 8px 0
+}
