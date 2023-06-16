@@ -1,10 +1,33 @@
 import OrderDetailsStyles from './OrderDetails.module.css'
+import React, { useEffect, useState } from 'react';
+import { IngredientContext } from '../../services/ingredientContext';
+import { postOrder } from '../../utils/api-burger';
 
 function OrderDetails () {
+    const {addedIngredient} = React.useContext(IngredientContext)
+    const [orderCode, setOrderCode] = useState('')
+
+  
+
+    useEffect(() => {
+        const awaitPost = async () => {
+            postOrder(addedIngredient.map(i => i._id))
+            .then(res => {
+                const {order} = res
+                setOrderCode(order.number)
+             })
+             
+        }
+        if(addedIngredient.length > 0) {
+         awaitPost()
+         .catch(e => console.log(e))
+        }
+        
+    }, [addedIngredient])
 
     return (
         <>
-        <h2 className={`${OrderDetailsStyles.title} text text_type_digits-large`}>034536</h2>
+        <h2 className={`${OrderDetailsStyles.title} text text_type_digits-large`}>{orderCode}</h2>
         <p className={`${OrderDetailsStyles.subtitle} text text_type_main-medium`}>идентификатор заказа</p>
         <div className={OrderDetailsStyles.image}></div>
         <p className={`${OrderDetailsStyles.text} text text_type_main-default`}>Ваш заказ начали готовить</p>
