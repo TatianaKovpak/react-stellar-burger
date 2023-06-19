@@ -4,12 +4,28 @@ import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { IngredientApiContext, IngredientContext } from '../../services/ingredientContext';
-import uuid from 'react-uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIngredientsFromServer } from '../../services/actions/actions';
+
 
 
 function BurgerIngredients ({state}) {
-    const {ingredients} = React.useContext(IngredientApiContext)
+    /*const {ingredients} = React.useContext(IngredientApiContext)*/
     const {addedIngredient} = React.useContext(IngredientContext)
+    const {ingredients} = useSelector((state) => state.ingredients)
+
+    const dispatch = useDispatch()
+
+    React.useEffect(() => {
+        dispatch(getIngredientsFromServer())
+    }, [])
+
+    console.log(ingredients)
+    
+
+    /*const bun = reduxIngredients.filter( i => i.type === 'bun');
+    const sauce = reduxIngredients.filter( i => i.type === 'sauce');
+    const main = reduxIngredients.filter(i => i.type === 'main')*/
 
 
     const bun = ingredients.filter( i => i.type === 'bun');
@@ -40,8 +56,6 @@ function BurgerIngredients ({state}) {
 }
 
 const IngredientContainer = ({arr, state}) => {
-
-
    return (
     <div className={BurgerIngredientsStyles.ingredient_container}>
         {arr.map(i => {
@@ -54,7 +68,7 @@ const IngredientContainer = ({arr, state}) => {
 }
 
  const Ingredient = ({props, state}) => {
-   
+
     const {addedIngredient} = React.useContext(IngredientContext)
 
     function editModalWindow () {
@@ -88,8 +102,7 @@ const IngredientContainer = ({arr, state}) => {
            editModalWindow()
         if(type === 'bun' && findBun(addedIngredient)){
             changeBun(addedIngredient)
-           
-            return
+             return
         }
         
         else {
