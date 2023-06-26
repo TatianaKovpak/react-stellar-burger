@@ -28,6 +28,7 @@
     width: 568px;
     height: 80px;
     position: relative;
+    border: 1px transparent;
   }
 
   .burger__element_top {
@@ -63,6 +64,8 @@
     justify-content: space-between;
     margin-top: 40px;
     margin-right: 16px;
+    
+    
   }
 
   

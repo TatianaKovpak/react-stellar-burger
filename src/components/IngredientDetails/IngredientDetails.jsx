@@ -5,6 +5,7 @@ import { ingredientPropType } from "../../utils/prop-types";
 
 
 function IngredientDetails({ingredient}) {
+    
 
     return (
         <>

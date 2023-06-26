@@ -2,11 +2,15 @@ import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
-import { useContext, useEffect, useReducer, useState} from "react";
-import ModalOverlay from '../ModalOverlay/ModalOverlay';
+import { useEffect, useReducer, useRef} from "react";
+import { useDrop } from 'react-dnd';
+
 import Modal from '../Modal/Modal';
-import { IngredientApiContext, IngredientContext } from '../../services/ingredientContext';
+
 import uuid from 'react-uuid';
+import { useDispatch, useSelector } from 'react-redux';
+
+
 
 const initialState = {
     totalPrice: 0
@@ -25,28 +29,21 @@ function reducer (state, action) {
     }
 }
 
-function BurgerConstructor ({state}) {
-    const {addedIngredient} = useContext(IngredientContext)
-
-    const [ingredients, dispatch] = useReducer(reducer, initialState)
+function BurgerConstructor () {
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    const [ingredients, dispatch] = useReducer(reducer, initialState) 
 
     const filling = addedIngredient.filter(i => i.type !== 'bun')
     const bun = addedIngredient.filter(i => i.type ===  'bun')
-    
-    const [modalActive, setModalActive] = useState(false)
-    const [modalProp, setModalProp] = useState({})
 
     const totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
 
-    state.setModalActive = setModalActive
-    state.setModalProp = setModalProp
+    const dispatchModal = useDispatch()
    
     function openPopup () {
-        setModalProp({
-            btn : 'order',
-            props : {}
+            dispatchModal({
+            type: 'OPEN_MODAL_ORDER'
         })
-        setModalActive(true)
     }
 
     useEffect( () => {
@@ -56,8 +53,6 @@ function BurgerConstructor ({state}) {
     return(
         <>
         <section className={BurgerConstructorStyles.section}>
-            
-            
             <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}` }>
               <BurgerBunTop arr={bun}/>
             </div>
@@ -75,7 +70,7 @@ function BurgerConstructor ({state}) {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal active={modalActive} modalProp = {modalProp}  setActive={setModalActive}/>
+                <Modal/>
 
             </div> 
         </section>
@@ -84,14 +79,29 @@ function BurgerConstructor ({state}) {
 }
 
 const BurgerIngredientsConstructor = ({arr}) => {
-    
+    const res = useSelector(data => data.burgerIngredients)
+    console.log(res)
+    const dispatch = useDispatch()
+    const [{isHover}, dropTarget] = useDrop({
+        accept: 'ingredient',
+        collect: monitor => ({
+            isHover: monitor.isOver()
+        }),
+        drop(item) {
+            dispatch({
+                type: 'ADD_SELECTED_INGREDIENT',
+                action: item._id
+            })
+        }
+    })
+  
+    const borderColor = isHover ? 'purple' : 'transparent'
     return (
-        <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`}>
+        <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} style={{borderColor}}>
             {arr.map(i => {
+                
                 return (
-                    
-                    <BurgerIngredient props={i} key={uuid()} />
-                   
+                    <BurgerIngredient onClick={e => console.log(e.target)} props={i} key={i.key} />
                 )
             })}
         </div>
@@ -100,9 +110,10 @@ const BurgerIngredientsConstructor = ({arr}) => {
 
 
 const BurgerIngredient = ({props}) => {
-    
+    const ref = useRef(null)
+    console.log(ref.current)
     return(
-        <div className={BurgerConstructorStyles.burger__element  }>
+        <div className={BurgerConstructorStyles.burger__element} >
         <div className={BurgerConstructorStyles.burger__element_icon}>
         <DragIcon type="primary" />
           </div>
@@ -136,7 +147,6 @@ const BurgerBunBottom = ({arr}) => {
     )
 }
 BurgerConstructor.propTypes ={
-    
     state: PropTypes.object
   }
 

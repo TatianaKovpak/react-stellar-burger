@@ -1,32 +1,45 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Counter, CurrencyIcon, Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
-import { IngredientApiContext, IngredientContext } from '../../services/ingredientContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredientsFromServer } from '../../services/actions/actions';
+import { useDrag } from 'react-dnd';
+import uuid from 'react-uuid';
+
+const key=uuid()
 
 
+function BurgerIngredients () {
+    const [currentTab, setCurrentTab] = React.useState('bun')
+    const ingredients = useSelector((state) => state.burgerIngredients.ingredients)
 
-function BurgerIngredients ({state}) {
-    /*const {ingredients} = React.useContext(IngredientApiContext)*/
-    const {addedIngredient} = React.useContext(IngredientContext)
-    const {ingredients} = useSelector((state) => state.ingredients)
+    const refOfTab = useRef(currentTab)
+    const refOfBun = useRef(null)
+    const refOfSauce = useRef(null)
+    const refOfMain = useRef(null)
+
+    const switchTab = (ref) => {
+            setTimeout(() => ref.current.scrollIntoView({ block: "start", behavior: "smooth" }), 100)
+     }
+    
+    const scroll = () => {
+        if (refOfBun.current.getBoundingClientRect().top >= 0) {
+          setCurrentTab('bun')
+        } else if (refOfSauce.current.getBoundingClientRect().top >= 0) {
+          setCurrentTab('sauce')
+        } else {
+          setCurrentTab('main')
+        }
+      }
 
     const dispatch = useDispatch()
 
     React.useEffect(() => {
         dispatch(getIngredientsFromServer())
-    }, [])
-
-    console.log(ingredients)
-    
-
-    /*const bun = reduxIngredients.filter( i => i.type === 'bun');
-    const sauce = reduxIngredients.filter( i => i.type === 'sauce');
-    const main = reduxIngredients.filter(i => i.type === 'main')*/
-
+    }, [dispatch])
+ 
 
     const bun = ingredients.filter( i => i.type === 'bun');
     const sauce = ingredients.filter( i => i.type === 'sauce');
@@ -34,60 +47,64 @@ function BurgerIngredients ({state}) {
 
     return (
          <section className={BurgerIngredientsStyles.section}>
+           
             <h1 className={`${BurgerIngredientsStyles.title} text text_type_main-large`}>Соберите бургер</h1>
             <div className={BurgerIngredientsStyles.menu}>
-                <Tab className="text text_type_main-default" active={true} >Булки</Tab>
-                <Tab className="text text_type_main-default" >Соусы</Tab>
-                <Tab className="text text_type_main-default" >Начинки</Tab>
+                <Tab className="text text_type_main-default" active={currentTab === 'bun'} onClick={() => {switchTab(refOfBun); setCurrentTab()}}>Булки</Tab>
+                <Tab className="text text_type_main-default" active={currentTab === 'sauce'} onClick={() => {switchTab(refOfSauce); setCurrentTab()}}>Соусы</Tab>
+                <Tab className="text text_type_main-default" active={currentTab === 'main'} onClick={() => {switchTab(refOfMain); setCurrentTab()}}>Начинки</Tab>
             </div>
             
-            <div className={`custom-scroll ${BurgerIngredientsStyles.scroll}`}>
+            <div onScroll={scroll} className={`custom-scroll ${BurgerIngredientsStyles.scroll}`} ref={refOfTab}>
               
-                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`}>Булки</h2>
-                 <IngredientContainer state={state} arr={bun} addedIngredient={addedIngredient}/>
-                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`}>Соусы</h2>
-                 <IngredientContainer state={state} arr={sauce} addedIngredient={addedIngredient}/>
-                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`}>Начинки</h2>
-                 <IngredientContainer state={state} arr={main} addedIngredient={addedIngredient}/>
+                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfBun}>Булки</h2>
+                 <IngredientContainer  arr={bun} />
+                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfSauce}>Соусы</h2>
+                 <IngredientContainer  arr={sauce} />
+                 <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfMain}>Начинки</h2>
+                 <IngredientContainer  arr={main} />
             </div>     
             
         </section>       
     )
 }
 
-const IngredientContainer = ({arr, state}) => {
+const IngredientContainer = ({arr}) => {
+
    return (
     <div className={BurgerIngredientsStyles.ingredient_container}>
         {arr.map(i => {
+            i.board = 'default' 
+            i.key = key
             return (
-             <Ingredient state={state} props={i} key={i._id} /> 
+                    <Ingredient  props={i} key={i.key} _id={i._id}/> 
             )   
         })}
     </div>
    )
 }
 
- const Ingredient = ({props, state}) => {
+ const Ingredient = ({props, _id}) => {
+   /* const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)*/
+    const dispatch = useDispatch()
+   
 
-    const {addedIngredient} = React.useContext(IngredientContext)
-
-    function editModalWindow () {
-        state.setModalProp({
-            btn: 'ingredient',
-            props : props
+    
+    const [{opacity}, dragRef] = useDrag({
+        type: 'ingredient',
+        item: {_id},
+        collect: monitor => ({
+            opacity: monitor.isDragging() ? 0.5 : 1
         })
-        state.setModalActive(true)
-    }
-
-    function findBun (arr) {
+    })
+  
+    /*function findBun (arr) {
         if(
         arr.find(i => i.type === 'bun')
         ) return true
-
       }
 
       function changeBun (arr) {
-
        const bun = arr.find(i => i.type === 'bun') 
        const index = arr.indexOf(bun)
        
@@ -95,25 +112,30 @@ const IngredientContainer = ({arr, state}) => {
        arr.splice(index, 1)
        }
        arr.push(props)
-    
-      }
+      }*/
 
     function addIngredient (type) {
-           editModalWindow()
-        if(type === 'bun' && findBun(addedIngredient)){
+        dispatch({
+            type: 'OPEN_MODAL_INGREDIENT',
+            propsBtn: props
+        })
+         
+
+        /*if(type === 'bun' && findBun(addedIngredient)){
             changeBun(addedIngredient)
              return
         }
-        
         else {
             addedIngredient.push(props)
-        }
+        }*/
     } 
     return (
-        <>
-        <div className={BurgerIngredientsStyles.ingredient} onClick={() => addIngredient(props.type)} >
+       
+        
+        <div className={BurgerIngredientsStyles.ingredient} onClick={() => addIngredient(props.type)} ref={dragRef} style={{opacity}}>
+            
             <img src={props.image} alt={props.name} />
-            <div className={BurgerIngredientsStyles.box}>
+            <div className={BurgerIngredientsStyles.box} >
                <p className={`${BurgerIngredientsStyles.ingredient__price} text text_type_digits-default`}>{props.price}</p>
                <div className={BurgerIngredientsStyles.ingredient__icon}>
                <CurrencyIcon type="primary" />
@@ -124,15 +146,19 @@ const IngredientContainer = ({arr, state}) => {
             </div>
             <p className={`${BurgerIngredientsStyles.ingredient__title} text text_type_main-default`}>{props.name}</p>
         </div>  
-        </>
+       
     )
  }
  BurgerIngredients.propTypes = {
     state: PropTypes.object
  } 
 
- Ingredient.propTypes = {
+ /*Ingredient.propTypes = {
     props: ingredientPropType
- }
+ }*/
 
 export default BurgerIngredients
+
+
+
+
