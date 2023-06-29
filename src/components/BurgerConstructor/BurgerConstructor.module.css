@@ -19,6 +19,7 @@
     display: grid;
     grid-template-columns: repeat(1, auto);
     row-gap: 16px;
+    border: 1px solid transparent;
   }
 
   .burger__element {
@@ -28,7 +29,7 @@
     width: 568px;
     height: 80px;
     position: relative;
-    border: 1px transparent;
+   
   }
 
   .burger__element_top {

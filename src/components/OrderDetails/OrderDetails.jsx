@@ -5,6 +5,7 @@ import { getOrderData } from '../../services/actions/actions';
 
 function OrderDetails () {
     const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    
     const order = useSelector(state => state.burgerIngredients.order)
     const dispatch = useDispatch()
 

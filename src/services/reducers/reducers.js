@@ -1,12 +1,15 @@
 import {GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS, ORDER_CHECKOUT_REQUEST, ORDER_CHECKOUT_FAILED, ORDER_CHECKOUT_SUCCESS,
-    OPEN_MODAL_ORDER, CLOSE_MODAL, OPEN_MODAL_INGREDIENT, UPDATE_TYPE, ADD_SELECTED_INGREDIENT, DELETE_SELECTED_INGREDIENT} from '../actions/actions'
+    OPEN_MODAL_ORDER, CLOSE_MODAL, OPEN_MODAL_INGREDIENT, UPDATE_TYPE, ADD_SELECTED_INGREDIENT, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS,
+    CHANGE_BUN} from '../actions/actions'
 
 const initialState = {
     ingredients: [],
     ingredientsRequest: false,
     ingredientsFailed: false,
 
-    addedIngredients: [],
+    addedIngredients: [
+      
+    ],
 
     modalOpened: {
         opened: false,
@@ -109,27 +112,44 @@ export const reducer = (state = initialState, action) => {
                 }
             }
         }
-
-       /* case UPDATE_TYPE: {
-            return {
-                ...state,
-                ingredients: state.ingredients.map(i => {
-                    i._id === action._id ? {...i, board: action.board} : i
-                })
-            }
-        }*/
         case ADD_SELECTED_INGREDIENT: {
-            console.log(action.action)
+           
             return {
                 ...state,
-                addedIngredients: [...state.addedIngredients, ...state.ingredients.filter(item => item._id === action.action)],
+                addedIngredients: [...state.addedIngredients, ...state.ingredients.filter(item =>  item._id === action.payload ), ],
             }
         }
+        /*case CHANGE_BUN: {
+            const bun = state.addedIngredients.find(item => item.type === 'bun')
+            const index = state.addedIngredients.indexOf(bun)
+            console.log(bun)
+         
+
+            return {
+                ...state,
+                addedIngredients: [...state.addedIngredients, index >=0 ? [...state.addedIngredients.splice(index, 1) && [...state.addedIngredients.filter(item =>  item._id === action.payload)]]: '']
+            }
+
+        }*/
         case DELETE_SELECTED_INGREDIENT: {
             return {
                 ...state,
-                addedIngredients: [...state.addedIngredients.filter(item => item._id === !action._id)]
+                addedIngredients: [...state.addedIngredients.filter(item => item.id !== action.payload)]
             }
+        }
+        case SORT_SELECTED_INGREDIENTS: {
+            
+            const {activeElementIndex, swapedElementIndex, i} = action.payload
+            if(!i) return 
+            return {
+                
+                ...state,
+                addedIngredients: (addedIngredients => { 
+               [addedIngredients[activeElementIndex], addedIngredients[swapedElementIndex]] =
+               [addedIngredients[swapedElementIndex], addedIngredients[activeElementIndex]];
+               return addedIngredients })([...state.addedIngredients]) 
+            }
+
         }
          
         default: {
@@ -137,3 +157,6 @@ export const reducer = (state = initialState, action) => {
         }
     }
 }
+
+
+

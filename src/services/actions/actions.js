@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { getIngredients, postOrder } from '../../utils/api-burger';
 
 export const GET_INGREDIENTS_REQUEST = 'GET_INGREDIENTS_REQUEST';
@@ -14,10 +15,10 @@ export const OPEN_MODAL_ORDER = 'OPEN_MODAL_ORDER';
 export const OPEN_MODAL_INGREDIENT = 'OPEN_MODAL_INGREDIENT';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 
-export const UPDATE_TYPE = 'UPDATE_TYPE';
-
 export const ADD_SELECTED_INGREDIENT = 'ADD_SELECTED_INGREDIENT';
+export const CHANGE_BUN = 'CHANGE_BUN'
 export const DELETE_SELECTED_INGREDIENT = 'DELETE_SELECTED_INGREDIENT';
+export const SORT_SELECTED_INGREDIENTS = 'SORT_SELECTED_INGREDIENTS'
 
 
 
@@ -79,3 +80,5 @@ export function getOrderData(arr) {
         
     }
 }
+
+

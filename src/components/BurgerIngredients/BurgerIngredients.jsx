@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useReducer } from 'react';
 import { Counter, CurrencyIcon, Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredientsFromServer } from '../../services/actions/actions';
 import { useDrag } from 'react-dnd';
+import { reducer, initialState } from '../BurgerConstructor/BurgerConstructor';
 import uuid from 'react-uuid';
 
 const key=uuid()
@@ -14,6 +15,10 @@ const key=uuid()
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.burgerIngredients.ingredients)
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    
+
+  
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -45,6 +50,10 @@ function BurgerIngredients () {
     const sauce = ingredients.filter( i => i.type === 'sauce');
     const main = ingredients.filter(i => i.type === 'main')
 
+    
+
+   
+
     return (
          <section className={BurgerIngredientsStyles.section}>
            
@@ -74,10 +83,10 @@ const IngredientContainer = ({arr}) => {
    return (
     <div className={BurgerIngredientsStyles.ingredient_container}>
         {arr.map(i => {
-            i.board = 'default' 
-            i.key = key
+           
+            
             return (
-                    <Ingredient  props={i} key={i.key} _id={i._id}/> 
+                    <Ingredient  props={i} key={i._id} _id={i._id}/> 
             )   
         })}
     </div>
@@ -85,10 +94,14 @@ const IngredientContainer = ({arr}) => {
 }
 
  const Ingredient = ({props, _id}) => {
-   /* const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)*/
-    const dispatch = useDispatch()
+   const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
    
+    
+   const counter = addedIngredient.filter(item => item._id === _id).length
 
+    const dispatchModal = useDispatch()
+   
+    
     
     const [{opacity}, dragRef] = useDrag({
         type: 'ingredient',
@@ -97,6 +110,8 @@ const IngredientContainer = ({arr}) => {
             opacity: monitor.isDragging() ? 0.5 : 1
         })
     })
+
+ 
   
     /*function findBun (arr) {
         if(
@@ -115,7 +130,7 @@ const IngredientContainer = ({arr}) => {
       }*/
 
     function addIngredient (type) {
-        dispatch({
+        dispatchModal({
             type: 'OPEN_MODAL_INGREDIENT',
             propsBtn: props
         })
@@ -142,7 +157,7 @@ const IngredientContainer = ({arr}) => {
                </div>
             </div>
             <div className={BurgerIngredientsStyles.ingredient__counter}>
-            <Counter />
+            <Counter count={counter} />
             </div>
             <p className={`${BurgerIngredientsStyles.ingredient__title} text text_type_main-default`}>{props.name}</p>
         </div>  

@@ -2,27 +2,31 @@ import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
-import { useEffect, useReducer, useRef} from "react";
-import { useDrop } from 'react-dnd';
+import { useEffect, useReducer, useRef, useState} from "react";
+import { useDrop, useDrag } from 'react-dnd';
 
 import Modal from '../Modal/Modal';
 
 import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
+import { removeItem } from '../../services/actions/actions';
 
 
 
-const initialState = {
-    totalPrice: 0
+export  const initialState = {
+    totalPrice: 0,
+    counter: 0
 }
 
-function reducer (state, action) {
+export  function reducer (state, action) {
     switch (action.type) {
     
         case 'sum' : 
           return  {
             totalPrice : action.payload
         }
+
+    
 
          default:
           throw new Error(`Wrong type of action: ${action.type}`);
@@ -37,6 +41,9 @@ function BurgerConstructor () {
     const bun = addedIngredient.filter(i => i.type ===  'bun')
 
     const totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
+   
+
+   
 
     const dispatchModal = useDispatch()
    
@@ -45,6 +52,8 @@ function BurgerConstructor () {
             type: 'OPEN_MODAL_ORDER'
         })
     }
+
+   
 
     useEffect( () => {
         dispatch({type: 'sum', payload: totalPrice})
@@ -79,54 +88,77 @@ function BurgerConstructor () {
 }
 
 const BurgerIngredientsConstructor = ({arr}) => {
-    const res = useSelector(data => data.burgerIngredients)
-    console.log(res)
+    const [item, setItem] = useState(null)
     const dispatch = useDispatch()
+
+     const removeItem = item => {
+        
+        dispatch({
+          type: 'DELETE_SELECTED_INGREDIENT',
+          payload: item.id
+        });
+      };
+
     const [{isHover}, dropTarget] = useDrop({
-        accept: 'ingredient',
+        accept: ['ingredient','addedIngredient'],
         collect: monitor => ({
             isHover: monitor.isOver()
         }),
         drop(item) {
             dispatch({
                 type: 'ADD_SELECTED_INGREDIENT',
-                action: item._id
+                payload: item._id
+            }) 
+            dispatch({
+                type: 'CHANGE_BUN',
+                payload: item._id
             })
+            dispatch({
+                type: 'SORT_SELECTED_INGREDIENTS',
+                payload: item
+            }) 
         }
     })
-  
-    const borderColor = isHover ? 'purple' : 'transparent'
+      const borderColor = isHover ? '#4c4cff' : 'transparent'
+
+     
+
     return (
         <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} style={{borderColor}}>
-            {arr.map(i => {
-                
+            {arr.map((i, index) => {
+            
+                i.id = (uuid())
                 return (
-                    <BurgerIngredient onClick={e => console.log(e.target)} props={i} key={i.key} />
+                    <BurgerIngredient handleClose = {() => removeItem(i)}  props={i} key={i.id}  i ={i} _id={i._id} />
                 )
             })}
         </div>
     )
 }
 
-
-const BurgerIngredient = ({props}) => {
-    const ref = useRef(null)
-    console.log(ref.current)
+const BurgerIngredient = ({props, handleClose, _id, i}) => {
+    const [{opacity}, dragRef] = useDrag({
+        type: 'addedIngredient',
+        item: {i},
+        collect: monitor => ({
+            opacity: monitor.isDragging() ? 0.5 : 1
+        })
+    })
+   
     return(
-        <div className={BurgerConstructorStyles.burger__element} >
+        <div className={BurgerConstructorStyles.burger__element} style={{opacity}} ref={dragRef} >
         <div className={BurgerConstructorStyles.burger__element_icon}>
         <DragIcon type="primary" />
           </div>
-          <ConstructorElement isLocked={false} text={props.name} thumbnail={props.image} price={props.price}/>
+          <ConstructorElement handleClose = {handleClose} isLocked={false} text={props.name} thumbnail={props.image} price={props.price}/>
         </div>
     )
 }
 
-
 const BurgerBunTop = ({arr}) => {
     return (
         <>
-        {arr.map(i => {
+        {arr.map((i) => {
             return (
                 <ConstructorElement type='top' isLocked ={true} text={`${i.name} (верх)`} price={i.price} thumbnail={i.image} key={i._id}/>
             )
@@ -151,3 +183,7 @@ BurgerConstructor.propTypes ={
   }
 
 export default BurgerConstructor
+
+
+
+
