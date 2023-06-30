@@ -13,7 +13,7 @@ function OrderDetails () {
         if(addedIngredient.length > 0) {
           dispatch(getOrderData(addedIngredient.map(i => i._id)))
             } 
-        },[dispatch])
+        },[dispatch, addedIngredient])
 
     return (
         <>

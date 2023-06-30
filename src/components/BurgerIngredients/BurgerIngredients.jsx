@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useReducer } from 'react';
+import React, { useRef } from 'react';
 import { Counter, CurrencyIcon, Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredientsFromServer } from '../../services/actions/actions';
 import { useDrag } from 'react-dnd';
-import { reducer, initialState } from '../BurgerConstructor/BurgerConstructor';
 import uuid from 'react-uuid';
 
 const key=uuid()
@@ -15,10 +14,6 @@ const key=uuid()
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.burgerIngredients.ingredients)
-    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
-    
-
-  
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -26,7 +21,7 @@ function BurgerIngredients () {
     const refOfMain = useRef(null)
 
     const switchTab = (ref) => {
-            setTimeout(() => ref.current.scrollIntoView({ block: "start", behavior: "smooth" }), 100)
+            setTimeout(() => ref.current.scrollIntoView({ block: "start",  behavior: "smooth" }), 100)
      }
     
     const scroll = () => {
@@ -45,18 +40,12 @@ function BurgerIngredients () {
         dispatch(getIngredientsFromServer())
     }, [dispatch])
  
-
     const bun = ingredients.filter( i => i.type === 'bun');
     const sauce = ingredients.filter( i => i.type === 'sauce');
     const main = ingredients.filter(i => i.type === 'main')
 
-    
-
-   
-
     return (
          <section className={BurgerIngredientsStyles.section}>
-           
             <h1 className={`${BurgerIngredientsStyles.title} text text_type_main-large`}>Соберите бургер</h1>
             <div className={BurgerIngredientsStyles.menu}>
                 <Tab className="text text_type_main-default" active={currentTab === 'bun'} onClick={() => {switchTab(refOfBun); setCurrentTab()}}>Булки</Tab>
@@ -65,7 +54,6 @@ function BurgerIngredients () {
             </div>
             
             <div onScroll={scroll} className={`custom-scroll ${BurgerIngredientsStyles.scroll}`} ref={refOfTab}>
-              
                  <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfBun}>Булки</h2>
                  <IngredientContainer  arr={bun} />
                  <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfSauce}>Соусы</h2>
@@ -83,8 +71,6 @@ const IngredientContainer = ({arr}) => {
    return (
     <div className={BurgerIngredientsStyles.ingredient_container}>
         {arr.map(i => {
-           
-            
             return (
                     <Ingredient  props={i} key={i._id} _id={i._id}/> 
             )   
@@ -101,52 +87,22 @@ const IngredientContainer = ({arr}) => {
 
     const dispatchModal = useDispatch()
    
-    
-    
     const [{opacity}, dragRef] = useDrag({
         type: 'ingredient',
-        item: {_id},
+        item: {_id, props},
         collect: monitor => ({
             opacity: monitor.isDragging() ? 0.5 : 1
         })
     })
-
- 
-  
-    /*function findBun (arr) {
-        if(
-        arr.find(i => i.type === 'bun')
-        ) return true
-      }
-
-      function changeBun (arr) {
-       const bun = arr.find(i => i.type === 'bun') 
-       const index = arr.indexOf(bun)
-       
-       if (index >= 0) {
-       arr.splice(index, 1)
-       }
-       arr.push(props)
-      }*/
 
     function addIngredient (type) {
         dispatchModal({
             type: 'OPEN_MODAL_INGREDIENT',
             propsBtn: props
         })
-         
-
-        /*if(type === 'bun' && findBun(addedIngredient)){
-            changeBun(addedIngredient)
-             return
-        }
-        else {
-            addedIngredient.push(props)
-        }*/
+   
     } 
     return (
-       
-        
         <div className={BurgerIngredientsStyles.ingredient} onClick={() => addIngredient(props.type)} ref={dragRef} style={{opacity}}>
             
             <img src={props.image} alt={props.name} />
@@ -161,16 +117,16 @@ const IngredientContainer = ({arr}) => {
             </div>
             <p className={`${BurgerIngredientsStyles.ingredient__title} text text_type_main-default`}>{props.name}</p>
         </div>  
-       
     )
  }
  BurgerIngredients.propTypes = {
     state: PropTypes.object
  } 
 
- /*Ingredient.propTypes = {
-    props: ingredientPropType
- }*/
+ Ingredient.propTypes = {
+    props: ingredientPropType,
+    _id: PropTypes.string
+ }
 
 export default BurgerIngredients
 

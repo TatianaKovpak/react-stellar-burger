@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { getIngredients, postOrder } from '../../utils/api-burger';
 
 export const GET_INGREDIENTS_REQUEST = 'GET_INGREDIENTS_REQUEST';
@@ -19,9 +18,6 @@ export const ADD_SELECTED_INGREDIENT = 'ADD_SELECTED_INGREDIENT';
 export const CHANGE_BUN = 'CHANGE_BUN'
 export const DELETE_SELECTED_INGREDIENT = 'DELETE_SELECTED_INGREDIENT';
 export const SORT_SELECTED_INGREDIENTS = 'SORT_SELECTED_INGREDIENTS'
-
-
-
 
 
 export function getIngredientsFromServer() {
@@ -50,7 +46,6 @@ export function getIngredientsFromServer() {
     })
 }
 }
-
 
 export function getOrderData(arr) {
     return function(dispatch) {

@@ -1,5 +1,6 @@
+import uuid from 'react-uuid'
 import {GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS, ORDER_CHECKOUT_REQUEST, ORDER_CHECKOUT_FAILED, ORDER_CHECKOUT_SUCCESS,
-    OPEN_MODAL_ORDER, CLOSE_MODAL, OPEN_MODAL_INGREDIENT, UPDATE_TYPE, ADD_SELECTED_INGREDIENT, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS,
+    OPEN_MODAL_ORDER, CLOSE_MODAL, OPEN_MODAL_INGREDIENT, ADD_SELECTED_INGREDIENT, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS,
     CHANGE_BUN} from '../actions/actions'
 
 const initialState = {
@@ -7,9 +8,7 @@ const initialState = {
     ingredientsRequest: false,
     ingredientsFailed: false,
 
-    addedIngredients: [
-      
-    ],
+    addedIngredients: [],
 
     modalOpened: {
         opened: false,
@@ -22,14 +21,13 @@ const initialState = {
     order: null,
     orderCheckoutFailed: false,
     orderCheckoutRequest: false,
-
 }
 
-console.log(initialState.addedIngredients)
-// Для обработки 
+
 export const reducer = (state = initialState, action) => {
     
     switch (action.type) {
+        
         case  GET_INGREDIENTS_REQUEST: {
             return {
             ...state,
@@ -37,6 +35,7 @@ export const reducer = (state = initialState, action) => {
             }
         }
         case GET_INGREDIENTS_SUCCESS: {
+
             return {
                 ...state,
                 ingredientsFailed: false,
@@ -45,6 +44,7 @@ export const reducer = (state = initialState, action) => {
             }
         }
         case GET_INGREDIENTS_FAILED: {
+
             return {
                 ...state,
                 ingredientsFailed: true,
@@ -53,6 +53,7 @@ export const reducer = (state = initialState, action) => {
                 }
             }
         case ORDER_CHECKOUT_REQUEST: {
+
             return {
                     ...state,
                     orderCheckoutRequest: true,
@@ -60,6 +61,7 @@ export const reducer = (state = initialState, action) => {
 
             }
         case ORDER_CHECKOUT_FAILED: {
+
             return {
                     ...state,
                     orderCheckoutFailed: true,
@@ -67,6 +69,7 @@ export const reducer = (state = initialState, action) => {
               
             }
         case ORDER_CHECKOUT_SUCCESS: {
+
                 return {
                     ...state,
                     orderCheckoutFailed: false,
@@ -75,6 +78,7 @@ export const reducer = (state = initialState, action) => {
                 }
             }
         case OPEN_MODAL_ORDER: {
+
             return {
                 ...state,
                 modalOpened : {
@@ -103,6 +107,7 @@ export const reducer = (state = initialState, action) => {
         }
 
         case CLOSE_MODAL: {
+
             return {
                 ...state,
                 modalOpened : {
@@ -113,45 +118,45 @@ export const reducer = (state = initialState, action) => {
             }
         }
         case ADD_SELECTED_INGREDIENT: {
-           
+            const id = uuid()
+
             return {
                 ...state,
-                addedIngredients: [...state.addedIngredients, ...state.ingredients.filter(item =>  item._id === action.payload ), ],
+                addedIngredients: [...state.addedIngredients, { ...action.payload, id: id}] ,
+               
             }
         }
-        /*case CHANGE_BUN: {
+     
+        case CHANGE_BUN: {
             const bun = state.addedIngredients.find(item => item.type === 'bun')
             const index = state.addedIngredients.indexOf(bun)
-            console.log(bun)
-         
 
+            if(index >= 0) {
+                state.addedIngredients.splice(index, 1)
+            }
+       
             return {
                 ...state,
-                addedIngredients: [...state.addedIngredients, index >=0 ? [...state.addedIngredients.splice(index, 1) && [...state.addedIngredients.filter(item =>  item._id === action.payload)]]: '']
+                addedIngredients: [...state.addedIngredients, ...state.ingredients.filter(item =>  item._id === action.payload)]
             }
 
-        }*/
+        }
         case DELETE_SELECTED_INGREDIENT: {
+
             return {
                 ...state,
                 addedIngredients: [...state.addedIngredients.filter(item => item.id !== action.payload)]
+                
             }
         }
         case SORT_SELECTED_INGREDIENTS: {
-            
-            const {activeElementIndex, swapedElementIndex, i} = action.payload
-            if(!i) return 
+           
             return {
-                
                 ...state,
-                addedIngredients: (addedIngredients => { 
-               [addedIngredients[activeElementIndex], addedIngredients[swapedElementIndex]] =
-               [addedIngredients[swapedElementIndex], addedIngredients[activeElementIndex]];
-               return addedIngredients })([...state.addedIngredients]) 
+                addedIngredients: action.payload
             }
 
         }
-         
         default: {
             return state
         }

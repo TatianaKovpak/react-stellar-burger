@@ -1,4 +1,3 @@
-
 import { useEffect} from "react";
 import ModalStyles from './Modal.module.css'
 import OrderDetails from "../OrderDetails/OrderDetails";
@@ -9,17 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 const modalRoot = document.getElementById('modals');
 
-
-
 function Modal () {
 
     const data = useSelector(state => state.burgerIngredients.modalOpened)
-
-
-
     const dispatch = useDispatch()
-
-
 
     useEffect(() => {
         document.addEventListener('keydown', closeByEscape)

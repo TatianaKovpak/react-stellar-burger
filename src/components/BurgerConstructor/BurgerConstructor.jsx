@@ -4,14 +4,8 @@ import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { useEffect, useReducer, useRef, useState} from "react";
 import { useDrop, useDrag } from 'react-dnd';
-
 import Modal from '../Modal/Modal';
-
-import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeItem } from '../../services/actions/actions';
-
-
 
 export  const initialState = {
     totalPrice: 0,
@@ -42,9 +36,6 @@ function BurgerConstructor () {
 
     const totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
    
-
-   
-
     const dispatchModal = useDispatch()
    
     function openPopup () {
@@ -52,8 +43,6 @@ function BurgerConstructor () {
             type: 'OPEN_MODAL_ORDER'
         })
     }
-
-   
 
     useEffect( () => {
         dispatch({type: 'sum', payload: totalPrice})
@@ -88,11 +77,10 @@ function BurgerConstructor () {
 }
 
 const BurgerIngredientsConstructor = ({arr}) => {
-    const [item, setItem] = useState(null)
     const dispatch = useDispatch()
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
 
      const removeItem = item => {
-        
         dispatch({
           type: 'DELETE_SELECTED_INGREDIENT',
           payload: item.id
@@ -100,57 +88,111 @@ const BurgerIngredientsConstructor = ({arr}) => {
       };
 
     const [{isHover}, dropTarget] = useDrop({
-        accept: ['ingredient','addedIngredient'],
+        accept: 'ingredient',
         collect: monitor => ({
             isHover: monitor.isOver()
         }),
         drop(item) {
-            dispatch({
-                type: 'ADD_SELECTED_INGREDIENT',
-                payload: item._id
-            }) 
-            dispatch({
-                type: 'CHANGE_BUN',
-                payload: item._id
-            })
-            dispatch({
-                type: 'SORT_SELECTED_INGREDIENTS',
-                payload: item
-            }) 
+             if (item.props.type !== 'bun') {
+                dispatch({
+                    type: 'ADD_SELECTED_INGREDIENT',
+                    payload: item.props
+                }) 
+            } else {
+                dispatch({
+                    type: 'CHANGE_BUN',
+                    payload: item._id
+                })
+            }  
         }
     })
-      const borderColor = isHover ? '#4c4cff' : 'transparent'
 
-     
+      const borderColor = isHover ? '#4c4cff' : 'transparent'
 
     return (
         <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} style={{borderColor}}>
-            {arr.map((i, index) => {
             
-                i.id = (uuid())
+            {arr.map((i) => {
+                    i.index = addedIngredient.indexOf(i)
                 return (
-                    <BurgerIngredient handleClose = {() => removeItem(i)}  props={i} key={i.id}  i ={i} _id={i._id} />
+                    <BurgerIngredient handleClose = {() => removeItem(i)} index={i.index} props={i} key={i.id} i={i} _id={i._id}  />
                 )
             })}
+            
         </div>
     )
 }
 
-const BurgerIngredient = ({props, handleClose, _id, i}) => {
-    const [{opacity}, dragRef] = useDrag({
+const BurgerIngredient = ({props, handleClose, index, id, i}) => {
+    const dispatch = useDispatch()
+    const ref = useRef(null)
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+
+    const sortAddedIngredients = (dragIndex, hoverIndex) => {
+
+      return function (dispatch) {
+            const newAddedIngredients = [...addedIngredient];
+            const dragIngredient = addedIngredient[dragIndex];
+            newAddedIngredients.splice(dragIndex, 1)
+            newAddedIngredients.splice(hoverIndex, 0, dragIngredient)
+
+          dispatch({
+            type: 'SORT_SELECTED_INGREDIENTS',
+            payload: newAddedIngredients
+          });
+       };
+      };
+
+    const [{isDragging}, dragRef] = useDrag({
         type: 'addedIngredient',
         item: {i},
         collect: monitor => ({
-            opacity: monitor.isDragging() ? 0.5 : 1
+            isDragging: monitor.isDragging() 
         })
     })
+
+    const [,addedIngredientDropTarget] = useDrop({
+        accept: 'addedIngredient',
+        hover: (item, monitor) => {
+            if(!ref.current) {
+                return
+            }
+            const dragIndex = item.i.index
+            const hoverIndex = index
+            
+            if (dragIndex === hoverIndex) return
+
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset()
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+              return;
+            }
+      
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+              return;
+            }
+
+           dispatch(sortAddedIngredients(dragIndex, hoverIndex))
+           
+           item.i.index = hoverIndex
+
+        },
+        
+    })
+    const opacity = isDragging? 0 : 1
+   dragRef(addedIngredientDropTarget(ref))
    
     return(
-        <div className={BurgerConstructorStyles.burger__element} style={{opacity}} ref={dragRef} >
+        <div className={BurgerConstructorStyles.burger__element} style={{opacity}} ref={ref}  >
+            
         <div className={BurgerConstructorStyles.burger__element_icon}>
         <DragIcon type="primary" />
           </div>
-          <ConstructorElement handleClose = {handleClose} isLocked={false} text={props.name} thumbnail={props.image} price={props.price}/>
+          <ConstructorElement handleClose = {handleClose} isLocked={false} text={props.name} thumbnail={props.image} price={props.price} />
+          
         </div>
     )
 }
@@ -178,7 +220,7 @@ const BurgerBunBottom = ({arr}) => {
         </>
     )
 }
-BurgerConstructor.propTypes ={
+BurgerIngredientsConstructor.propTypes ={
     state: PropTypes.object
   }
 
