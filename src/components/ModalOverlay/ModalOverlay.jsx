@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux'
 import ModalOverlayStyles from './ModalOverlay.module.css'
 
 
@@ -5,11 +6,15 @@ import ModalOverlayStyles from './ModalOverlay.module.css'
 
 
 
-function ModalOverlay ({active, setActive}) {
+function ModalOverlay ({active}) {
+
+    const dispatch = useDispatch()
 
 function closePopup (evt) {
     if(evt.target.classList.contains(ModalOverlayStyles.overlay__active)) {
-        setActive(false)
+        dispatch({
+            type: 'CLOSE_MODAL'
+        })
     } 
 
 }

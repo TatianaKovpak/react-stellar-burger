@@ -1,18 +1,17 @@
 import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
-import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
-import { useContext, useEffect, useReducer, useState} from "react";
-import ModalOverlay from '../ModalOverlay/ModalOverlay';
+import { useEffect, useReducer, useRef, useState} from "react";
+import { useDrop, useDrag } from 'react-dnd';
 import Modal from '../Modal/Modal';
-import { IngredientApiContext, IngredientContext } from '../../services/ingredientContext';
-import uuid from 'react-uuid';
+import { useDispatch, useSelector } from 'react-redux';
 
-const initialState = {
-    totalPrice: 0
+export  const initialState = {
+    totalPrice: 0,
+    counter: 0
 }
 
-function reducer (state, action) {
+export  function reducer (state, action) {
     switch (action.type) {
     
         case 'sum' : 
@@ -20,44 +19,37 @@ function reducer (state, action) {
             totalPrice : action.payload
         }
 
+    
+
          default:
           throw new Error(`Wrong type of action: ${action.type}`);
     }
 }
 
-function BurgerConstructor ({state}) {
-    const {addedIngredient} = useContext(IngredientContext)
-
-    const [ingredients, dispatch] = useReducer(reducer, initialState)
+function BurgerConstructor () {
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    const [ingredients, dispatch] = useReducer(reducer, initialState) 
 
     const filling = addedIngredient.filter(i => i.type !== 'bun')
     const bun = addedIngredient.filter(i => i.type ===  'bun')
-    
-    const [modalActive, setModalActive] = useState(false)
-    const [modalProp, setModalProp] = useState({})
 
     const totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
-
-    state.setModalActive = setModalActive
-    state.setModalProp = setModalProp
+   
+    const dispatchModal = useDispatch()
    
     function openPopup () {
-        setModalProp({
-            btn : 'order',
-            props : {}
+            dispatchModal({
+            type: 'OPEN_MODAL_ORDER'
         })
-        setModalActive(true)
     }
 
     useEffect( () => {
         dispatch({type: 'sum', payload: totalPrice})
     }, [totalPrice])
-        
+   
     return(
         <>
         <section className={BurgerConstructorStyles.section}>
-            
-            
             <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}` }>
               <BurgerBunTop arr={bun}/>
             </div>
@@ -75,7 +67,7 @@ function BurgerConstructor ({state}) {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal active={modalActive} modalProp = {modalProp}  setActive={setModalActive}/>
+                <Modal/>
 
             </div> 
         </section>
@@ -84,38 +76,130 @@ function BurgerConstructor ({state}) {
 }
 
 const BurgerIngredientsConstructor = ({arr}) => {
-    
+    const dispatch = useDispatch()
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+
+     const removeItem = item => {
+        dispatch({
+          type: 'DELETE_SELECTED_INGREDIENT',
+          payload: item.id
+        });
+      };
+
+    const [{isHover}, dropTarget] = useDrop({
+        accept: 'ingredient',
+        collect: monitor => ({
+            isHover: monitor.isOver()
+        }),
+        drop(item) {
+             if (item.props.type !== 'bun') {
+                dispatch({
+                    type: 'ADD_SELECTED_INGREDIENT',
+                    payload: item.props
+                }) 
+            } else {
+                dispatch({
+                    type: 'CHANGE_BUN',
+                    payload: item._id
+                })
+            }  
+        }
+    })
+
+      const borderColor = isHover ? '#4c4cff' : 'transparent'
+
     return (
-        <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`}>
-            {arr.map(i => {
+        <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} style={{borderColor}}>
+            
+            {arr.map((i) => {
+                    i.index = addedIngredient.indexOf(i)
                 return (
-                    
-                    <BurgerIngredient props={i} key={uuid()} />
-                   
+                    <BurgerIngredient handleClose = {() => removeItem(i)} index={i.index} props={i} key={i.id} i={i} _id={i._id}  />
                 )
             })}
+            
         </div>
     )
 }
 
+const BurgerIngredient = ({props, handleClose, index, id, i}) => {
+    const dispatch = useDispatch()
+    const ref = useRef(null)
+    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
 
-const BurgerIngredient = ({props}) => {
-    
+    const sortAddedIngredients = (dragIndex, hoverIndex) => {
+
+      return function (dispatch) {
+            const newAddedIngredients = [...addedIngredient];
+            const dragIngredient = addedIngredient[dragIndex];
+            newAddedIngredients.splice(dragIndex, 1)
+            newAddedIngredients.splice(hoverIndex, 0, dragIngredient)
+
+          dispatch({
+            type: 'SORT_SELECTED_INGREDIENTS',
+            payload: newAddedIngredients
+          });
+       };
+      };
+
+    const [{isDragging}, dragRef] = useDrag({
+        type: 'addedIngredient',
+        item: {i},
+        collect: monitor => ({
+            isDragging: monitor.isDragging() 
+        })
+    })
+
+    const [,addedIngredientDropTarget] = useDrop({
+        accept: 'addedIngredient',
+        hover: (item, monitor) => {
+            if(!ref.current) {
+                return
+            }
+            const dragIndex = item.i.index
+            const hoverIndex = index
+            
+            if (dragIndex === hoverIndex) return
+
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset()
+            const hoverClientY = clientOffset.y - hoverBoundingRect.top
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+              return;
+            }
+      
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+              return;
+            }
+
+           dispatch(sortAddedIngredients(dragIndex, hoverIndex))
+           
+           item.i.index = hoverIndex
+
+        },
+        
+    })
+    const opacity = isDragging? 0 : 1
+   dragRef(addedIngredientDropTarget(ref))
+   
     return(
-        <div className={BurgerConstructorStyles.burger__element  }>
+        <div className={BurgerConstructorStyles.burger__element} style={{opacity}} ref={ref}  >
+            
         <div className={BurgerConstructorStyles.burger__element_icon}>
         <DragIcon type="primary" />
           </div>
-          <ConstructorElement isLocked={false} text={props.name} thumbnail={props.image} price={props.price}/>
+          <ConstructorElement handleClose = {handleClose} isLocked={false} text={props.name} thumbnail={props.image} price={props.price} />
+          
         </div>
     )
 }
-
 
 const BurgerBunTop = ({arr}) => {
     return (
         <>
-        {arr.map(i => {
+        {arr.map((i) => {
             return (
                 <ConstructorElement type='top' isLocked ={true} text={`${i.name} (верх)`} price={i.price} thumbnail={i.image} key={i._id}/>
             )
@@ -135,9 +219,12 @@ const BurgerBunBottom = ({arr}) => {
         </>
     )
 }
-BurgerConstructor.propTypes ={
-    
+BurgerIngredientsConstructor.propTypes ={
     state: PropTypes.object
   }
 
 export default BurgerConstructor
+
+
+
+
