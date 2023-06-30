@@ -1,6 +1,5 @@
 import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
-import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { useEffect, useReducer, useRef, useState} from "react";
 import { useDrop, useDrag } from 'react-dnd';
@@ -47,7 +46,7 @@ function BurgerConstructor () {
     useEffect( () => {
         dispatch({type: 'sum', payload: totalPrice})
     }, [totalPrice])
-        
+   
     return(
         <>
         <section className={BurgerConstructorStyles.section}>
