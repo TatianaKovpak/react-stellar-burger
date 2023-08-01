@@ -1,19 +1,10 @@
 import OrderDetailsStyles from './OrderDetails.module.css'
-import React, { useEffect} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getOrderData } from '../../services/actions/actions';
+
+import { useSelector } from 'react-redux';
+
 
 function OrderDetails () {
-    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
-    
-    const order = useSelector(state => state.burgerIngredients.order)
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        if(addedIngredient.length > 0) {
-          dispatch(getOrderData(addedIngredient.map(i => i._id)))
-            } 
-        },[dispatch, addedIngredient])
+    const order = useSelector(state => state.order.order)
 
     return (
         <>

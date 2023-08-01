@@ -4,16 +4,14 @@ import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
-import { getIngredientsFromServer } from '../../services/actions/actions';
+import { getIngredientsFromServer } from '../../services/actions/ingredientsActions';
 import { useDrag } from 'react-dnd';
-import uuid from 'react-uuid';
 
-const key=uuid()
 
 
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
-    const ingredients = useSelector((state) => state.burgerIngredients.ingredients)
+    const ingredients = useSelector((state) => state.ingredients.ingredients)
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -80,7 +78,8 @@ const IngredientContainer = ({arr}) => {
 }
 
  const Ingredient = ({props, _id}) => {
-   const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+
+   const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
    
     
    const counter = addedIngredient.filter(item => item._id === _id).length

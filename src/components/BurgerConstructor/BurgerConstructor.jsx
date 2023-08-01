@@ -1,10 +1,14 @@
 import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import update from 'immutability-helper'
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
 import PropTypes from "prop-types";
-import { useEffect, useReducer, useRef, useState} from "react";
+import { useEffect, useReducer, useRef} from "react";
 import { useDrop, useDrag } from 'react-dnd';
 import Modal from '../Modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
+import OrderDetails from "../OrderDetails/OrderDetails";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import { getOrderData } from '../../services/actions/orderActions';
 
 export  const initialState = {
     totalPrice: 0,
@@ -18,17 +22,16 @@ export  function reducer (state, action) {
           return  {
             totalPrice : action.payload
         }
-
-    
-
          default:
           throw new Error(`Wrong type of action: ${action.type}`);
     }
 }
 
 function BurgerConstructor () {
-    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
+    const data = useSelector(state => state.modal.modalOpened)
     const [ingredients, dispatch] = useReducer(reducer, initialState) 
+    
 
     const filling = addedIngredient.filter(i => i.type !== 'bun')
     const bun = addedIngredient.filter(i => i.type ===  'bun')
@@ -38,6 +41,9 @@ function BurgerConstructor () {
     const dispatchModal = useDispatch()
    
     function openPopup () {
+        if(addedIngredient.length > 0) {
+            dispatchModal(getOrderData(addedIngredient.map(i => i._id)))
+              } 
             dispatchModal({
             type: 'OPEN_MODAL_ORDER'
         })
@@ -46,16 +52,15 @@ function BurgerConstructor () {
     useEffect( () => {
         dispatch({type: 'sum', payload: totalPrice})
     }, [totalPrice])
-   
     return(
         <>
         <section className={BurgerConstructorStyles.section}>
-            <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}` }>
-              <BurgerBunTop arr={bun}/>
+            <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}`}>
+              {bun.length && <BurgerBunTop arr={bun}/>}
             </div>
             <BurgerIngredientsConstructor arr={filling} />
             <div className={BurgerConstructorStyles.burger__element}>
-              <BurgerBunBottom arr={bun}/>
+            {bun.length && <BurgerBunBottom arr={bun}/>}
             </div>
             <div className={BurgerConstructorStyles.sum__container}>
                 <div className={BurgerConstructorStyles.sum}>
@@ -67,7 +72,9 @@ function BurgerConstructor () {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal/>
+                <Modal>
+                {data.propsModal.typeBtn !== 'ingredient' ? <OrderDetails /> : <IngredientDetails  ingredient = {data.propsModal.propsBtn}/>}
+                </Modal>
 
             </div> 
         </section>
@@ -77,7 +84,7 @@ function BurgerConstructor () {
 
 const BurgerIngredientsConstructor = ({arr}) => {
     const dispatch = useDispatch()
-    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
 
      const removeItem = item => {
         dispatch({
@@ -105,11 +112,8 @@ const BurgerIngredientsConstructor = ({arr}) => {
             }  
         }
     })
-
-      const borderColor = isHover ? '#4c4cff' : 'transparent'
-
     return (
-        <div className={`${BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} style={{borderColor}}>
+        <div className={`${isHover ? BurgerConstructorStyles.burger__constructor_hover : BurgerConstructorStyles.burger__constructor} custom-scroll`} ref={dropTarget} >
             
             {arr.map((i) => {
                     i.index = addedIngredient.indexOf(i)
@@ -125,20 +129,22 @@ const BurgerIngredientsConstructor = ({arr}) => {
 const BurgerIngredient = ({props, handleClose, index, id, i}) => {
     const dispatch = useDispatch()
     const ref = useRef(null)
-    const addedIngredient = useSelector(state => state.burgerIngredients.addedIngredients)
+    const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
 
     const sortAddedIngredients = (dragIndex, hoverIndex) => {
 
-      return function (dispatch) {
-            const newAddedIngredients = [...addedIngredient];
-            const dragIngredient = addedIngredient[dragIndex];
-            newAddedIngredients.splice(dragIndex, 1)
-            newAddedIngredients.splice(hoverIndex, 0, dragIngredient)
+        return function (dispatch) {
+            const newAddedIngredients = update(addedIngredient,{
+                $splice : [
+                [dragIndex, 1],
+                [hoverIndex, 0, addedIngredient[dragIndex]],
+                ]
+            })
 
-          dispatch({
-            type: 'SORT_SELECTED_INGREDIENTS',
-            payload: newAddedIngredients
-          });
+            dispatch({
+                type: 'SORT_SELECTED_INGREDIENTS',
+                payload: newAddedIngredients
+            });
        };
       };
 
@@ -181,11 +187,11 @@ const BurgerIngredient = ({props, handleClose, index, id, i}) => {
         },
         
     })
-    const opacity = isDragging? 0 : 1
+  
    dragRef(addedIngredientDropTarget(ref))
    
     return(
-        <div className={BurgerConstructorStyles.burger__element} style={{opacity}} ref={ref}  >
+        <div className={isDragging ? BurgerConstructorStyles.burger__element_dragging : BurgerConstructorStyles.burger__element} ref={ref}  >
             
         <div className={BurgerConstructorStyles.burger__element_icon}>
         <DragIcon type="primary" />
@@ -197,25 +203,21 @@ const BurgerIngredient = ({props, handleClose, index, id, i}) => {
 }
 
 const BurgerBunTop = ({arr}) => {
+    const [i] = arr
     return (
         <>
-        {arr.map((i) => {
-            return (
-                <ConstructorElement type='top' isLocked ={true} text={`${i.name} (верх)`} price={i.price} thumbnail={i.image} key={i._id}/>
-            )
-        })}
+            {<ConstructorElement type='top' isLocked ={true} text={`${i.name} (верх)`} price={i.price} thumbnail={i.image} key={i._id}/>}
         </>
     )
 }
 
 const BurgerBunBottom = ({arr}) => {
+    const [i] = arr
     return (
         <>
-        {arr.map(i => {
-            return (
-                <ConstructorElement type='bottom' isLocked ={true} text={`${i.name} (низ)`} price={i.price} thumbnail={i.image} key={i._id}/>
-            )
-        })}
+       
+               { <ConstructorElement type='bottom' isLocked ={true} text={`${i.name} (низ)`} price={i.price} thumbnail={i.image} key={i._id}/>}
+      
         </>
     )
 }

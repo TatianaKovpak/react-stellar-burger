@@ -47,6 +47,7 @@ export const reducer = (state = initialState, action) => {
 
             return {
                 ...state,
+                ...state.ingredients,
                 ingredientsFailed: true,
                 ingredientsRequest: false
 
@@ -56,6 +57,7 @@ export const reducer = (state = initialState, action) => {
 
             return {
                     ...state,
+                    
                     orderCheckoutRequest: true,
                 }
 
@@ -64,6 +66,7 @@ export const reducer = (state = initialState, action) => {
 
             return {
                     ...state,
+                    ...state.order,
                     orderCheckoutFailed: true,
                 }
               

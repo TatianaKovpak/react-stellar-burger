@@ -1,16 +1,14 @@
 import { useEffect} from "react";
 import ModalStyles from './Modal.module.css'
-import OrderDetails from "../OrderDetails/OrderDetails";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import ReactDOM from "react-dom";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import { useDispatch, useSelector } from "react-redux";
 
 const modalRoot = document.getElementById('modals');
 
-function Modal () {
+function Modal (props) {
 
-    const data = useSelector(state => state.burgerIngredients.modalOpened)
+    const data = useSelector(state => state.modal.modalOpened)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -35,10 +33,8 @@ function Modal () {
     return ReactDOM.createPortal ( 
             <>
                 <div className={data.opened ? ModalStyles.modal__active : ModalStyles.modal} >
-                    
                     <button className={ModalStyles.close__icon} onClick={closeModal}></button>   
-                    {data.propsModal.typeBtn !== 'ingredient' ? <OrderDetails /> :  <IngredientDetails  ingredient = {data.propsModal.propsBtn} />}
-                    
+                    {props.children}
                 </div>
                 <ModalOverlay active={data.opened}/>
             </>
