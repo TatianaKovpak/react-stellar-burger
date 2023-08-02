@@ -2,7 +2,7 @@ import { ConstructorElement, Button, DragIcon, CurrencyIcon} from '@ya.praktikum
 import update from 'immutability-helper'
 import BurgerConstructorStyles from './BurgerConstructor.module.css'
 import PropTypes from "prop-types";
-import { useEffect, useReducer, useRef} from "react";
+import { useEffect, useMemo, useReducer, useRef} from "react";
 import { useDrop, useDrag } from 'react-dnd';
 import Modal from '../Modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,37 +30,41 @@ export  function reducer (state, action) {
 function BurgerConstructor () {
     const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
     const data = useSelector(state => state.modal.modalOpened)
-    const [ingredients, dispatch] = useReducer(reducer, initialState) 
-    
+    const [ingredients, dispatchModal] = useReducer(reducer, initialState) 
+    const dispatch = useDispatch()
+  
+    const filling = useMemo(() => addedIngredient.filter(i => i.type !== 'bun'), [addedIngredient] ) 
+    const bun = useMemo(() => addedIngredient.filter(i => i.type ===  'bun'), [addedIngredient]) 
 
-    const filling = addedIngredient.filter(i => i.type !== 'bun')
-    const bun = addedIngredient.filter(i => i.type ===  'bun')
-
-    const totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
-   
-    const dispatchModal = useDispatch()
+    const totalPrice = useMemo(() => addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0), [addedIngredient]) 
    
     function openPopup () {
         if(addedIngredient.length > 0) {
-            dispatchModal(getOrderData(addedIngredient.map(i => i._id)))
+            dispatch(getOrderData(addedIngredient.map(i => i._id)))
               } 
-            dispatchModal({
+            dispatch({
             type: 'OPEN_MODAL_ORDER'
         })
     }
 
+    function closePopup () {
+        dispatch({
+            type: 'CLOSE_MODAL'
+        })
+    }
+
     useEffect( () => {
-        dispatch({type: 'sum', payload: totalPrice})
+        dispatchModal({type: 'sum', payload: totalPrice})
     }, [totalPrice])
     return(
         <>
         <section className={BurgerConstructorStyles.section}>
             <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}`}>
-              {bun.length && <BurgerBunTop arr={bun}/>}
+              {bun.length ? <BurgerBunTop arr={bun}/> : ''}
             </div>
             <BurgerIngredientsConstructor arr={filling} />
             <div className={BurgerConstructorStyles.burger__element}>
-            {bun.length && <BurgerBunBottom arr={bun}/>}
+            {bun.length ? <BurgerBunBottom arr={bun}/> : ''}
             </div>
             <div className={BurgerConstructorStyles.sum__container}>
                 <div className={BurgerConstructorStyles.sum}>
@@ -72,7 +76,7 @@ function BurgerConstructor () {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal>
+                <Modal onClose= {() => closePopup()} isOpened={data.opened}>
                 {data.propsModal.typeBtn !== 'ingredient' ? <OrderDetails /> : <IngredientDetails  ingredient = {data.propsModal.propsBtn}/>}
                 </Modal>
 

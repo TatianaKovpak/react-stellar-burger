@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Counter, CurrencyIcon, Tab} from '@ya.praktikum/react-developer-burger-ui-components'
 import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
@@ -38,9 +38,9 @@ function BurgerIngredients () {
         dispatch(getIngredientsFromServer())
     }, [dispatch])
  
-    const bun = ingredients.filter( i => i.type === 'bun');
-    const sauce = ingredients.filter( i => i.type === 'sauce');
-    const main = ingredients.filter(i => i.type === 'main')
+    const bun = useMemo(() => ingredients.filter( i => i.type === 'bun'), [ingredients] ) ;
+    const sauce = useMemo(() => ingredients.filter( i => i.type === 'sauce'), [ingredients] ) ;
+    const main = useMemo(() => ingredients.filter(i => i.type === 'main'), [ingredients] ) 
 
     return (
          <section className={BurgerIngredientsStyles.section}>
@@ -82,7 +82,7 @@ const IngredientContainer = ({arr}) => {
    const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
    
     
-   const counter = addedIngredient.filter(item => item._id === _id).length
+   const counter = useMemo(() => addedIngredient.filter(item => item._id === _id).length, [addedIngredient]) 
 
     const dispatchModal = useDispatch()
    

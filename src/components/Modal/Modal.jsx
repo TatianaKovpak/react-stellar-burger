@@ -2,15 +2,11 @@ import { useEffect} from "react";
 import ModalStyles from './Modal.module.css'
 import ReactDOM from "react-dom";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
-import { useDispatch, useSelector } from "react-redux";
+
 
 const modalRoot = document.getElementById('modals');
 
 function Modal (props) {
-
-    const data = useSelector(state => state.modal.modalOpened)
-    const dispatch = useDispatch()
-
     useEffect(() => {
         document.addEventListener('keydown', closeByEscape)
         
@@ -20,23 +16,18 @@ function Modal (props) {
         
     function closeByEscape(evt) {
         if (evt.key === 'Escape') {
-            closeModal()
+            props.onClose()
+           
         }
     }
-
-    function closeModal () {
-        dispatch({
-            type: 'CLOSE_MODAL'
-        })
-    }
-
+    
     return ReactDOM.createPortal ( 
             <>
-                <div className={data.opened ? ModalStyles.modal__active : ModalStyles.modal} >
-                    <button className={ModalStyles.close__icon} onClick={closeModal}></button>   
+                <div className={ props.isOpened ? ModalStyles.modal__active : ModalStyles.modal} >
+                    <button className={ModalStyles.close__icon} onClick={props.onClose}></button>   
                     {props.children}
                 </div>
-                <ModalOverlay active={data.opened}/>
+                <ModalOverlay active={props.isOpened}/>
             </>
     , modalRoot)
 }
