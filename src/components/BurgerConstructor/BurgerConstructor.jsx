@@ -7,7 +7,6 @@ import { useDrop, useDrag } from 'react-dnd';
 import Modal from '../Modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderDetails from "../OrderDetails/OrderDetails";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import { getOrderData } from '../../services/actions/orderActions';
 
 export  const initialState = {
@@ -29,7 +28,7 @@ export  function reducer (state, action) {
 
 function BurgerConstructor () {
     const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
-    const data = useSelector(state => state.modal.modalOpened)
+    const modal = useSelector(state => state.modal)
     const [ingredients, dispatchModal] = useReducer(reducer, initialState) 
     const dispatch = useDispatch()
   
@@ -43,7 +42,8 @@ function BurgerConstructor () {
             dispatch(getOrderData(addedIngredient.map(i => i._id)))
               } 
             dispatch({
-            type: 'OPEN_MODAL_ORDER'
+            type: 'OPEN_MODAL_ORDER',
+            
         })
     }
 
@@ -60,11 +60,11 @@ function BurgerConstructor () {
         <>
         <section className={BurgerConstructorStyles.section}>
             <div className={`${BurgerConstructorStyles.burger__element} ${BurgerConstructorStyles.burger__element_top}`}>
-              {bun.length ? <BurgerBunTop arr={bun}/> : ''}
+              {bun.length > 0 && <BurgerBunTop arr={bun}/> }
             </div>
             <BurgerIngredientsConstructor arr={filling} />
             <div className={BurgerConstructorStyles.burger__element}>
-            {bun.length ? <BurgerBunBottom arr={bun}/> : ''}
+            {bun.length > 0 && <BurgerBunBottom arr={bun}/> }
             </div>
             <div className={BurgerConstructorStyles.sum__container}>
                 <div className={BurgerConstructorStyles.sum}>
@@ -76,8 +76,8 @@ function BurgerConstructor () {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal onClose= {() => closePopup()} isOpened={data.opened}>
-                {data.propsModal.typeBtn !== 'ingredient' ? <OrderDetails /> : <IngredientDetails  ingredient = {data.propsModal.propsBtn}/>}
+                <Modal onClose= {() => closePopup()} isOpened={modal.isDetails}>
+                    <OrderDetails/> 
                 </Modal>
 
             </div> 

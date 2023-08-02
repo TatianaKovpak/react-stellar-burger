@@ -1,55 +1,37 @@
 import { OPEN_MODAL_INGREDIENT, OPEN_MODAL_ORDER, CLOSE_MODAL } from '../actions/modalActions'
 
 const initialState = {
-    modalOpened: {
-        opened: false,
-        propsModal: {
-            typeBtn: null,
-            propsBtn: {}
-        }
-    },
+    isDetails: false,
+    isIngredient: false,
+    content: {}
 }
 
 export const modalReducer = (state = initialState, action) => {
     
     switch (action.type) {
         case OPEN_MODAL_ORDER: {
+            return {
+                ...state,
+                isDetails: true,
+                isIngredient: false,
+                content: {}
 
-            return {
-                ...state,
-                modalOpened : {
-                    ...state.modalOpened,
-                    opened : true,
-                    propsModal: {
-                        typeBtn: 'order',
-                        propsBtn: {}
-                    }
-                }
-            }
-        }    
-        case OPEN_MODAL_INGREDIENT :{
-            
-            return {
-                ...state,
-                modalOpened : {
-                    ...state.modalOpened,
-                    opened : true,
-                    propsModal: {
-                        typeBtn: 'ingredient',
-                        propsBtn: action.propsBtn,
-                    }
-                }
             }
         }
-        case CLOSE_MODAL: {
-
+        case OPEN_MODAL_INGREDIENT: {
             return {
                 ...state,
-                modalOpened : {
-                    ...state.modalOpened,
-                    opened : false,
-
-                }
+                isDetails: false,
+                isIngredient: true,
+                content: action.payload
+            }
+        }
+   
+        case CLOSE_MODAL: {
+            return {
+                ...state,
+               isDetails: false,
+               isIngredient: false
             }
         }
 

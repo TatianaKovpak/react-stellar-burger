@@ -6,12 +6,15 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredientsFromServer } from '../../services/actions/ingredientsActions';
 import { useDrag } from 'react-dnd';
+import Modal from '../Modal/Modal';
+import IngredientDetails from '../IngredientDetails/IngredientDetails';
 
 
 
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.ingredients.ingredients)
+    const modal = useSelector(state => state.modal)
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -32,6 +35,12 @@ function BurgerIngredients () {
         }
       }
 
+      function closePopup () {
+        dispatch({
+            type: 'CLOSE_MODAL'
+        })
+    }
+
     const dispatch = useDispatch()
 
     React.useEffect(() => {
@@ -41,6 +50,7 @@ function BurgerIngredients () {
     const bun = useMemo(() => ingredients.filter( i => i.type === 'bun'), [ingredients] ) ;
     const sauce = useMemo(() => ingredients.filter( i => i.type === 'sauce'), [ingredients] ) ;
     const main = useMemo(() => ingredients.filter(i => i.type === 'main'), [ingredients] ) 
+    
 
     return (
          <section className={BurgerIngredientsStyles.section}>
@@ -58,7 +68,10 @@ function BurgerIngredients () {
                  <IngredientContainer  arr={sauce} />
                  <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfMain}>Начинки</h2>
                  <IngredientContainer  arr={main} />
-            </div>     
+            </div>   
+            <Modal onClose= {() => closePopup()} isOpened={modal.isIngredient}>
+                {modal.isIngredient && <IngredientDetails  ingredient = {modal.content}/>}
+            </Modal>  
             
         </section>       
     )
@@ -78,10 +91,8 @@ const IngredientContainer = ({arr}) => {
 }
 
  const Ingredient = ({props, _id}) => {
-
-   const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
    
-    
+   const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
    const counter = useMemo(() => addedIngredient.filter(item => item._id === _id).length, [addedIngredient]) 
 
     const dispatchModal = useDispatch()
@@ -94,15 +105,17 @@ const IngredientContainer = ({arr}) => {
         })
     })
 
-    function addIngredient (type) {
+    function openPopup () {
         dispatchModal({
             type: 'OPEN_MODAL_INGREDIENT',
-            propsBtn: props
+            payload: props
         })
    
     } 
+
+   
     return (
-        <div className={BurgerIngredientsStyles.ingredient} onClick={() => addIngredient(props.type)} ref={dragRef} style={{opacity}}>
+        <div className={BurgerIngredientsStyles.ingredient} onClick={() => openPopup()} ref={dragRef} style={{opacity}}>
             
             <img src={props.image} alt={props.name} />
             <div className={BurgerIngredientsStyles.box} >
