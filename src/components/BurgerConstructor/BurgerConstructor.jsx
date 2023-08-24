@@ -8,6 +8,7 @@ import Modal from '../Modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderDetails from "../OrderDetails/OrderDetails";
 import { getOrderData } from '../../services/actions/orderActions';
+import { OnlyAuth} from '../ProtectedRouteElement';
 
 export  const initialState = {
     totalPrice: 0,
@@ -29,22 +30,26 @@ export  function reducer (state, action) {
 function BurgerConstructor () {
     const addedIngredient = useSelector(state => state.ingredients.addedIngredients)
     const modal = useSelector(state => state.modal)
-    const [ingredients, dispatchModal] = useReducer(reducer, initialState) 
+    const [ingredients, dispatchModal] = useReducer(reducer, initialState)
+    const isAuthChecked = useSelector((state) => state.user.isAuth);
     const dispatch = useDispatch()
   
     const filling = useMemo(() => addedIngredient.filter(i => i.type !== 'bun'), [addedIngredient] ) 
     const bun = useMemo(() => addedIngredient.filter(i => i.type ===  'bun'), [addedIngredient]) 
 
     const totalPrice = useMemo(() => addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0), [addedIngredient]) 
-   
+    
     function openPopup () {
-        if(addedIngredient.length > 0) {
+        if(addedIngredient.length > 0 && isAuthChecked) {
             dispatch(getOrderData(addedIngredient.map(i => i._id)))
-              } 
             dispatch({
-            type: 'OPEN_MODAL_ORDER',
-            
+            type: 'OPEN_MODAL_ORDER',  
         })
+        }else if(!isAuthChecked){
+            dispatch({
+                type: 'OPEN_MODAL_ORDER',  
+            })
+        }
     }
 
     function closePopup () {
@@ -76,9 +81,12 @@ function BurgerConstructor () {
                 <div>
                     <Button htmlType="button" type="primary" size="medium" onClick={openPopup}>Оформить заказ</Button>
                 </div>
-                <Modal onClose= {() => closePopup()} isOpened={modal.isDetails}>
+             { modal.isDetails &&  <OnlyAuth element={<Modal onClose= {() => closePopup()} isOpened={modal.isDetails}> 
                     <OrderDetails/> 
-                </Modal>
+                </Modal>} /> }
+
+                
+                   
 
             </div> 
         </section>
@@ -219,9 +227,7 @@ const BurgerBunBottom = ({arr}) => {
     const [i] = arr
     return (
         <>
-       
                { <ConstructorElement type='bottom' isLocked ={true} text={`${i.name} (низ)`} price={i.price} thumbnail={i.image} key={i._id}/>}
-      
         </>
     )
 }

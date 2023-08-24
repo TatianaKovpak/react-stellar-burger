@@ -1,0 +1,21 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20%;
+}
+
+.title {
+ color: #F2F2F3;
+ text-shadow: 2px 2px #3333FF40,
+              0 0 1em #3333FF40,
+              0 0 0.2em #3333FF40;
+margin-bottom: 20px;
+ 
+}
+
+.link {
+    text-decoration: none;
+    color: #4C4CFF;
+}
