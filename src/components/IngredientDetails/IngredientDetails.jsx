@@ -1,11 +1,9 @@
 
-import PropTypes from "prop-types";
 import IngredientDetailsStyles from './IngredientDetails.module.css'
 import { ingredientPropType } from "../../utils/prop-types";
 
 
 function IngredientDetails({ingredient}) {
-
     return (
         <>
         <h2 className={` text text_type_main-large ${IngredientDetailsStyles.title}`}>Детали ингредиента</h2>

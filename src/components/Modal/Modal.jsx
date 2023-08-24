@@ -1,17 +1,12 @@
-
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import ModalStyles from './Modal.module.css'
-import OrderDetails from "../OrderDetails/OrderDetails";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import ReactDOM from "react-dom";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
+
 const modalRoot = document.getElementById('modals');
 
-
-
-function Modal ({active, setActive, modalProp}) {
-
+function Modal (props) {
     useEffect(() => {
         document.addEventListener('keydown', closeByEscape)
         
@@ -21,30 +16,20 @@ function Modal ({active, setActive, modalProp}) {
         
     function closeByEscape(evt) {
         if (evt.key === 'Escape') {
-            closeModal()
+            props.onClose()
+           
         }
     }
-
-    function closeModal () {
-        setActive(false)
-    }
-
+    
     return ReactDOM.createPortal ( 
             <>
-            
-                <div className={active ? ModalStyles.modal__active : ModalStyles.modal} >
-                    
-                    <button className={ModalStyles.close__icon} onClick={closeModal}></button>   
-                    {modalProp.btn !== 'ingredient' ? <OrderDetails /> :  <IngredientDetails  ingredient = {modalProp.props} />}
-                    
+                <div className={ props.isOpened ? ModalStyles.modal__active : ModalStyles.modal} >
+                    <button className={ModalStyles.close__icon} onClick={props.onClose}></button>   
+                    {props.children}
                 </div>
-                <ModalOverlay setActive={setActive} active={active}/>
-               
-               
+                <ModalOverlay active={props.isOpened}/>
             </>
     , modalRoot)
-      
-
 }
 
 export default Modal

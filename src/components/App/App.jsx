@@ -3,37 +3,22 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import { useEffect, useState, useContext, useReducer } from "react";
-import {getIngredients} from "../../utils/api-burger";
-import { IngredientApiContext, IngredientContext } from "../../services/ingredientContext";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 
 
 function App() {
-  const [addedIngredient, setAddedIngredient] = useState([])
-  const [ingredients, setIngredients] = useState([])
-
-  const state = {}
-
-  useEffect(() => {
-
-    const awaitIngredients = async () => {
-      getIngredients()
-      .then(data => setIngredients(data.data))
-    }
-      awaitIngredients()
-      .catch(e => console.log(e))
-  }, [])
 
   return (
     <div className={styles.app}>
+
         <AppHeader/>
       <main className={styles.main}>
-        <IngredientApiContext.Provider value={{ingredients, setIngredients}}>
-          <IngredientContext.Provider value={{addedIngredient, setAddedIngredient}}>
-            <BurgerIngredients state={state} /> 
-            <BurgerConstructor state={state} />
-          </IngredientContext.Provider>
-        </IngredientApiContext.Provider>
+          <DndProvider backend={HTML5Backend}>
+              <BurgerIngredients /> 
+              <BurgerConstructor  />
+          </DndProvider>
       </main>
     </div>
   );
