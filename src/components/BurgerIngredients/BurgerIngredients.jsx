@@ -13,7 +13,7 @@ import { Link, useLocation } from 'react-router-dom';
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.ingredients.ingredients)
-    const modal = useSelector(state => state.modal)
+    const dispatch = useDispatch()
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -34,17 +34,20 @@ function BurgerIngredients () {
         }
       }
 
-
-    const dispatch = useDispatch()
-
     React.useEffect(() => {
         dispatch(getIngredientsFromServer())
     }, [dispatch])
+
+    let bun = {}
+    let sauce = {}
+    let main = {}
+
+    useMemo(() => {
+      bun = ingredients.filter( i => i.type === 'bun')
+      sauce = ingredients.filter( i => i.type === 'sauce')
+      main = ingredients.filter(i => i.type === 'main')
+    }, [bun, sauce, main, ingredients])
  
-    const bun = useMemo(() => ingredients.filter( i => i.type === 'bun'), [ingredients] ) ;
-    const sauce = useMemo(() => ingredients.filter( i => i.type === 'sauce'), [ingredients] ) ;
-    const main = useMemo(() => ingredients.filter(i => i.type === 'main'), [ingredients] ) 
-    
 
     return (
          <section className={BurgerIngredientsStyles.section}>

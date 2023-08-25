@@ -1,4 +1,4 @@
-import { loginUser, registerUser, forgotPasswordRequest, resetPasswordRequest, getUser,  logoutRequest, refreshTokenRequest, refreshUserDataRequest } from "../../utils/api-burger"
+import { loginUser, registerUser, /*forgotPasswordRequest,*/ resetPasswordRequest, getUser,  logoutRequest, refreshTokenRequest, refreshUserDataRequest } from "../../utils/api-burger"
 
 
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'
@@ -128,7 +128,7 @@ export const getUserData = () => {
         })
     }
 }
-export const forgotPassword = (value) => {
+/*export const forgotPassword = (value) => {
     return function(dispatch) {
         dispatch({
             type: FORGOT_PASSWORD
@@ -136,6 +136,7 @@ export const forgotPassword = (value) => {
         forgotPasswordRequest(value)
         .then(res => {
             if(res && res.success) {
+                localStorage.setItem('forgotPasswordSuccess', 'true')
                 dispatch({
                     type: FORGOT_PASSWORD_SUCCESS
                 })
@@ -147,7 +148,7 @@ export const forgotPassword = (value) => {
         })
         
     }
-}
+}*/
 
 export const resetPassword = (value) => {
     return function(dispatch) {
@@ -157,6 +158,7 @@ export const resetPassword = (value) => {
         resetPasswordRequest(value)
         .then(res => {
             if(res && res.success) {
+                localStorage.removeItem('forgotPasswordSuccess')
                 dispatch({
                     type: RESET_PASSWORD_SUCCESS
                 })
@@ -167,7 +169,6 @@ export const resetPassword = (value) => {
             }
         })
         .catch(err => {
-            console.log(err)
             dispatch({
                 type: RESET_PASSWORD_FAILED,
              })
@@ -224,9 +225,20 @@ export const refreshUserData = (form) => {
             }
         })
         .catch((err) => {
-            dispatch({
-                type: REFRESH_USERDATA_FAILED
-            })
+            console.log(err)
+            if (err === "Ошибка:403" || err ==='Ошибка:401') {
+                refreshTokenRequest()
+                .then((res) => {
+                    localStorage.setItem('refreshToken', res.refreshToken)
+                    localStorage.setItem('accessToken', res.accessToken)
+                    dispatch(refreshUserData(form))
+                })
+            } else {
+                dispatch({
+                    type: REFRESH_USERDATA_FAILED
+                })
+            
+            }
         })
     }
 }

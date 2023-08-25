@@ -1,11 +1,12 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components'
 import ResetPasswordPageStyles from './resetPassword.module.css'
-import { Link } from 'react-router-dom'
+import { Link, Navigate,} from 'react-router-dom'
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { resetPassword } from '../services/actions/userActions';
+import { resetPassword } from '../../services/actions/userActions';
 
 export function ResetPasswordPage () {
+ 
     const [value, setValue] = React.useState({
         password: '',
         token : '',
@@ -18,6 +19,14 @@ export function ResetPasswordPage () {
  const submitForm = (e) => {
     dispatch(resetPassword(value))
   }
+  
+  const isForgotPasswordSuccess = localStorage.getItem('forgotPasswordSuccess')
+
+  if(isForgotPasswordSuccess === null ) {
+    return <Navigate to = '/' />
+  }
+
+  
 
     return (
         <div className={ResetPasswordPageStyles.page}>

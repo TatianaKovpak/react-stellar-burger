@@ -2,7 +2,7 @@ import { Button, EmailInput, PasswordInput } from "@ya.praktikum/react-developer
 import { Link} from "react-router-dom"
 import LoginPageStyles from "./login.module.css"
 import React, { useEffect } from 'react';
-import { userAuthorization } from "../services/actions/userActions";
+import { userAuthorization } from "../../services/actions/userActions";
 import { useDispatch } from "react-redux";
 
 

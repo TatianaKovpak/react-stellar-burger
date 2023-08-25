@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { getUserData} from "../services/actions/userActions";
 
 
 export const ProtectedRouteElement = ({ onlyUnAuth = false, element }) => {
   const isAuthChecked = useSelector((state) => state.user.isAuth);
+  
   const location = useLocation();
   const dispatch = useDispatch()
+ 
 
   useEffect(() => {
     dispatch(getUserData())

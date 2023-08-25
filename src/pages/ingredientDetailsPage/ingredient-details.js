@@ -1,4 +1,4 @@
-import IngredientDetails from "../components/IngredientDetails/IngredientDetails";
+import IngredientDetails from "../../components/IngredientDetails/IngredientDetails";
 import ingredientDetailsPageStyles from './ingredientDetailsPage.module.css'
 
 

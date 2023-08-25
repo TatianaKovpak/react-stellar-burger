@@ -1,4 +1,4 @@
-import { postOrder } from "../../utils/api-burger";
+import { postOrder, refreshTokenRequest } from "../../utils/api-burger";
 
 export const ORDER_CHECKOUT_REQUEST = 'ORDER_CHECKOUT_REQUEST';
 export const ORDER_CHECKOUT_FAILED = 'ORDER_CHECKOUT_FAILED';
@@ -25,9 +25,19 @@ export function getOrderData(arr) {
             }
         })
         .catch(err => {
-            dispatch({
-                type:ORDER_CHECKOUT_FAILED
-            })
+            if (err === "Ошибка:403" || err ==='Ошибка:401') {
+                refreshTokenRequest()
+                .then((res) => {
+                    localStorage.setItem('refreshToken', res.refreshToken)
+                    localStorage.setItem('accessToken', res.accessToken)
+                    dispatch(getOrderData(arr))
+                })
+            } else {
+                dispatch({
+                    type:ORDER_CHECKOUT_FAILED
+                })
+            }
+           
         })
         
     }

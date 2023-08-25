@@ -1,5 +1,6 @@
 
 const url = 'https://norma.nomoreparties.space/api';
+const token = localStorage.getItem("refreshToken")
 
 function checkResponse(res) {  
  
@@ -19,7 +20,8 @@ export function postOrder (arr) {
   return fetch((`${url}/orders`), {
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'authorization': token,
     },
     method: 'POST',
     body : JSON.stringify({ingredients : arr})
@@ -95,7 +97,7 @@ export const getUser = (token) => {
     .catch(err => console.log(err))
 }
 
-const token = localStorage.getItem("refreshToken")
+
 export const refreshTokenRequest = () => {
   return fetch(`${url}/auth/token`, {
     method: "POST",
@@ -119,7 +121,7 @@ export const refreshUserDataRequest = (token, form) => {
     },
     body : JSON.stringify(form)
   }) .then(checkResponse)
-     .catch(err => console.log(err))
+     .catch(res => console.log(res.message))
   
 }
 

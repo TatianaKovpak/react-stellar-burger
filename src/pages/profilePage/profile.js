@@ -3,7 +3,7 @@ import ProfilePageStyles from './profile.module.css'
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {logoutAction, refreshUserData } from '../services/actions/userActions';
+import {logoutAction, refreshUserData } from '../../services/actions/userActions';
 
 
 export function ProfilePage () {

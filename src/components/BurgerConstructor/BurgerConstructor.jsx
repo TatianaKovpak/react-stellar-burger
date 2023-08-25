@@ -33,19 +33,24 @@ function BurgerConstructor () {
     const [ingredients, dispatchModal] = useReducer(reducer, initialState)
     const isAuthChecked = useSelector((state) => state.user.isAuth);
     const dispatch = useDispatch()
-  
-    const filling = useMemo(() => addedIngredient.filter(i => i.type !== 'bun'), [addedIngredient] ) 
-    const bun = useMemo(() => addedIngredient.filter(i => i.type ===  'bun'), [addedIngredient]) 
 
-    const totalPrice = useMemo(() => addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0), [addedIngredient]) 
-    
+    let filling = {}
+    let bun = {}
+    let totalPrice 
+
+    useMemo(() => {
+        filling = addedIngredient.filter(i => i.type !== 'bun')
+        bun = addedIngredient.filter(i => i.type ===  'bun')
+        totalPrice = addedIngredient.reduce((acc, item) => item.type === 'bun' ? acc + (item.price * 2) : acc + item.price, 0)
+    } , [filling, bun, totalPrice, addedIngredient])
+  
     function openPopup () {
         if(addedIngredient.length > 0 && isAuthChecked) {
             dispatch(getOrderData(addedIngredient.map(i => i._id)))
             dispatch({
-            type: 'OPEN_MODAL_ORDER',  
+              type: 'OPEN_MODAL_ORDER',  
         })
-        }else if(!isAuthChecked){
+        } else if(!isAuthChecked){
             dispatch({
                 type: 'OPEN_MODAL_ORDER',  
             })

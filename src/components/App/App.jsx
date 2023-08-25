@@ -1,18 +1,18 @@
 import AppHeader from "../AppHeader/AppHeader";
 import { Routes, Route, useLocation, useNavigate} from 'react-router-dom';
-import { HomePage } from "../../pages/home";
-import { LoginPage } from "../../pages/login";
-import { RegisterPage } from "../../pages/register";
-import { ForgotPasswordPage } from "../../pages/forgot-password";
-import { ResetPasswordPage } from "../../pages/reset-password";
-import { ProfilePage } from "../../pages/profile";
-import { NotFound404 } from "../../pages/404";
+import { HomePage } from "../../pages/homePage/home";
+import { LoginPage } from "../../pages/loginUserPage/login";
+import { RegisterPage } from "../../pages/registerUserPage/register";
+import { ForgotPasswordPage } from "../../pages/forgotPasswordPage/forgot-password";
+import { ResetPasswordPage } from "../../pages/resetPasswordPage/reset-password";
+import { ProfilePage } from "../../pages/profilePage/profile";
+import { NotFound404 } from "../../pages/notFoundPage/404";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import Modal from "../Modal/Modal";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRouteElement";
 import { useDispatch, useSelector } from "react-redux";
-import { IngredientDetailsPage } from "../../pages/ingredient-details";
+import { IngredientDetailsPage } from "../../pages/ingredientDetailsPage/ingredient-details";
 
 function App() {
   const modal = useSelector(state => state.modal)
@@ -20,6 +20,7 @@ function App() {
   const location = useLocation()
   const navigate = useNavigate()
   const background = location.state && location.state.background; 
+  
 
   function closePopup (e) {
     navigate('/')
@@ -27,6 +28,8 @@ function App() {
         type: 'CLOSE_MODAL'
     });
 }
+
+
 
   return (
   <>
@@ -38,7 +41,7 @@ function App() {
       <Route path="/login" element={<OnlyUnAuth element={<LoginPage/>}/> }/>
       <Route path="/register" element={<OnlyUnAuth element={<RegisterPage/>} />}/>
       <Route path="/forgot-password" element={<OnlyUnAuth element={<ForgotPasswordPage/>}/> }/>
-      <Route path="/reset-password" element={<OnlyUnAuth element={<ResetPasswordPage/>} />}/>
+      <Route path = '/reset-password' element={<OnlyUnAuth element={<ResetPasswordPage/>} />}/>
       <Route path="/ingredient/:id" element={<IngredientDetailsPage/>}/>
       <Route path="/profile" element={<OnlyAuth element = {<ProfilePage/>}  />}/>
       <Route path="*" element={<NotFound404/>} />

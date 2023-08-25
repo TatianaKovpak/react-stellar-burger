@@ -1,7 +1,7 @@
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import RegisterPageStyles from "./register.module.css"
 import { Link } from "react-router-dom";
-import { userRegistration } from "../services/actions/userActions";
+import { userRegistration } from "../../services/actions/userActions";
 import { useDispatch } from "react-redux";
 import React from "react";
 
