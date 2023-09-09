@@ -14,7 +14,7 @@ function closePopup (evt) {
             type: 'CLOSE_MODAL'
         })
     } 
-    navigate('/')
+    navigate(-1)
 
 }
 

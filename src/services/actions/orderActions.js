@@ -5,11 +5,12 @@ export const ORDER_CHECKOUT_FAILED = 'ORDER_CHECKOUT_FAILED';
 export const ORDER_CHECKOUT_SUCCESS = 'ORDER_CHECKOUT_SUCCESS';
 
 export function getOrderData(arr) {
+    const accessToken = localStorage.getItem('accessToken')
     return function(dispatch) {
         dispatch ({
             type: ORDER_CHECKOUT_REQUEST,
         })
-        postOrder(arr)
+        postOrder(arr, accessToken)
         .then(res => {
             if(res && res.success) {
                 

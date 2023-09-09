@@ -21,8 +21,10 @@ function Modal (props) {
         if (evt.key === 'Escape') {
             props.onClose()
         }
-        navigate('/')
+        
     }
+
+    
 
     return ReactDOM.createPortal ( 
             <>

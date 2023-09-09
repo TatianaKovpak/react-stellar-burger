@@ -1,5 +1,5 @@
 import AppHeader from "../AppHeader/AppHeader";
-import { Routes, Route, useLocation, useNavigate} from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, Router} from 'react-router-dom';
 import { HomePage } from "../../pages/homePage/home";
 import { LoginPage } from "../../pages/loginUserPage/login";
 import { RegisterPage } from "../../pages/registerUserPage/register";
@@ -7,12 +7,15 @@ import { ForgotPasswordPage } from "../../pages/forgotPasswordPage/forgot-passwo
 import { ResetPasswordPage } from "../../pages/resetPasswordPage/reset-password";
 import { ProfilePage } from "../../pages/profilePage/profile";
 import { NotFound404 } from "../../pages/notFoundPage/404";
+import { OrderDetailsPage } from "../../pages/orderDetailsPage/orderDetailsPage";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import Modal from "../Modal/Modal";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRouteElement";
 import { useDispatch, useSelector } from "react-redux";
 import { IngredientDetailsPage } from "../../pages/ingredientDetailsPage/ingredient-details";
+import { FeedPage } from "../../pages/feedPage/feed";
+import Order from "../Order/Order";
 
 function App() {
   const modal = useSelector(state => state.modal)
@@ -23,7 +26,7 @@ function App() {
   
 
   function closePopup (e) {
-    navigate('/')
+   navigate(-1)
     dispatch({
         type: 'CLOSE_MODAL'
     });
@@ -43,7 +46,12 @@ function App() {
       <Route path="/forgot-password" element={<OnlyUnAuth element={<ForgotPasswordPage/>}/> }/>
       <Route path = '/reset-password' element={<OnlyUnAuth element={<ResetPasswordPage/>} />}/>
       <Route path="/ingredient/:id" element={<IngredientDetailsPage/>}/>
-      <Route path="/profile" element={<OnlyAuth element = {<ProfilePage/>}  />}/>
+      <Route path="/profile" element={<OnlyAuth element = {<ProfilePage/>}/>}/>
+      <Route path="/profile/orders" element={<OnlyAuth element={<ProfilePage/>}/>}/>
+      <Route path="/profile/orders/:number" element={<OrderDetailsPage/>}/>
+     
+      <Route path="/feed" element={<FeedPage/>}/>
+      <Route path="/feed/:number"element = {<OrderDetailsPage/>}/>
       <Route path="*" element={<NotFound404/>} />
     </Routes>
     
@@ -51,9 +59,16 @@ function App() {
       <Routes>
         <Route path="/ingredient/:id" element={ 
           <Modal onClose= {() => closePopup()} isOpened={modal.isIngredient}>
-              {modal.isIngredient && <IngredientDetails  />}
+              {modal.isIngredient && <IngredientDetails />}
           </Modal>   }>
-
+        </Route>
+        <Route path="/feed/:number" element={
+          <Modal onClose={() => closePopup()} isOpened={modal.isOrder}>{modal.isOrder && <OrderDetailsPage/>}
+          </Modal>}> 
+        </Route>
+        <Route path="/profile/orders/:number" element={
+          <Modal onClose={() => closePopup()} isOpened={modal.isOrder}>{modal.isOrder && <OrderDetailsPage/>}
+          </Modal>}> 
         </Route>
       </Routes>
     )}

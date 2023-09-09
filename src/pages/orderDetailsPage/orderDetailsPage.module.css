@@ -1,0 +1,145 @@
+.ingredient__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border-radius: 100px;
+    background-color: #131316;
+
+}
+.ingredient__image_background {
+    background: linear-gradient(#801AB2 , #4C4CFF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50px;
+}
+.image {
+    width: 170%;
+    
+}
+
+.ingredient {
+    display: flex;
+    flex-direction: row;
+    height: 64px;
+    margin-top: 24px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%S;
+}
+.ingredients {
+    width: 100%;
+    overflow-y: scroll;
+    height: 366px;
+    margin-top: 24px;
+}
+.ingredient__title {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 414px;
+
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.order__modal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 0;
+    width: 640px;
+}
+.order {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 122px;
+    width: 640px;
+}
+.order__number {
+    align-self: center;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+}
+.order__number_modal {
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+
+}
+.title {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    margin-top: 40px;
+
+}
+.order__status {
+    margin-top: 12px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #00CCCC;
+}
+.order__status_in_progress {
+    margin-top: 12px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #F2F2F3;
+    
+}
+.orderDetailsPageStyles.order__status_canceled {
+    margin-top: 12px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: red;
+
+}
+.order__compound_title {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    margin-top: 60px;
+}
+.price {
+    width: 120px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around   ;
+    align-items: center;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+    margin-right: 5px;
+    
+    
+}
+.total {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 40px;
+}
+.sum {
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 85px;
+}

@@ -16,7 +16,7 @@ export function getIngredients () {
     .catch(err => console.log(err))
 }
 
-export function postOrder (arr) {
+export function postOrder (arr, token) {
   return fetch((`${url}/orders`), {
     headers: {
       'Accept': 'application/json',
@@ -94,7 +94,7 @@ export const getUser = (token) => {
     },
     method: 'GET',
   }).then(checkResponse)
-    .catch(err => console.log(err))
+    /*.catch(err => console.log(err))*/
 }
 
 

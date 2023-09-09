@@ -51,3 +51,11 @@
     justify-content: flex-end;
 }
 
+.scroll {
+    overflow-y: scroll;
+    height: 916px;
+    width: 872px;
+    margin-left: 40px;
+    overflow-x: hidden;
+}
+

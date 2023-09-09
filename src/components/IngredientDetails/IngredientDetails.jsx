@@ -18,6 +18,7 @@ function IngredientDetails() {
     const params = useParams()
     const id = params.id.slice(1)
     const openedIngredient = ingredients.length > 0 ? ingredients.filter(i => i._id === id)[0] : {}
+    
  
     return (
       <>

@@ -1,0 +1,100 @@
+import { useDispatch, useSelector } from 'react-redux'
+import  {useMemo } from 'react';
+import orderStyles from './OrderStyles.module.css'
+import { Link, useLocation } from 'react-router-dom';
+import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from "prop-types";
+
+function Order (allOrders) {
+  const ingredients = useSelector((state) => state.ingredients.ingredients)
+  const dispatch = useDispatch()
+  const location = useLocation()
+  
+
+
+  
+  const orderIngredients = []
+  
+
+
+
+  if(allOrders.allOrders.orders) {
+    orderIngredients.push(...allOrders.allOrders.orders.map(i =>  i.ingredients ))
+    
+  }
+
+  const ingredientsWithData = orderIngredients.map(item => {
+    
+    return item.map(item2 => {
+     return ingredients.filter(elem => item2 === elem._id)[0]
+    })
+  })
+  
+  const buns = useMemo(() => ingredientsWithData.filter(i => i.type === 'bun'), [ingredientsWithData])
+  
+  
+  
+
+  function openPopup () {
+    dispatch({
+        type: 'OPEN_MODAL_ORDER_DETAILS',
+     })
+} 
+
+
+    return (
+        <>
+        {allOrders.allOrders.orders && allOrders.allOrders.orders.map((i, index) => {
+            return (
+              <Link key={i.number} to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
+              <div  className={orderStyles.order} onClick={() => openPopup() }>
+                <div className={orderStyles.order__info}>
+                <p className={`text text_type_main-small ${orderStyles.order__number}`}>{`#${i.number}`}</p>
+                <p className={`text text_type_main-small text_color_inactive`}><FormattedDate date={new Date(i.updatedAt)}/></p>
+              </div>
+              <h2>{i.name}</h2>
+              <ul className={orderStyles.images}>
+              
+                {ingredientsWithData.length && ingredientsWithData[index].map((item, index, arr) => { 
+                  const deletedElemArr = arr.length - 6
+
+                       return (
+                        <li key={item._id + index} className={orderStyles.image__background}>
+                          {/*index === 5 &&*/ arr.length > 6 ?
+                          <div  className={orderStyles.image}> 
+                             
+                             <img  src={item.image} alt={item.name} key={item._id + index + i.number} className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`}/>
+                             <p className={`text text_type_digits-default ${index === 5 ? orderStyles.count__visible : orderStyles.count}`}>{`+${deletedElemArr}`}</p>
+                         </div>
+                          
+                          :
+                            <div  className={orderStyles.image} > 
+                                <img  src={item.image} alt={item.name} key={item._id + index + i.number} className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`} />
+                            </div>
+        }
+                        </li>    
+                      )
+                    }).slice(0,6)
+                    
+               }
+              
+               <p className={`text text_type_main-default ${orderStyles.total}`}>{ingredientsWithData[index].reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price ,0 ,0)}
+               <CurrencyIcon type="primary" />
+               </p>
+               
+              </ul>
+              </div>
+              </Link>
+            )
+        })
+}
+       </>
+        
+    )
+}
+
+Order.propTypes = {
+  allOrders: PropTypes.object
+}
+
+export default Order

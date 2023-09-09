@@ -9,13 +9,16 @@ import { rootReducer } from "./services/reducers";
 import { compose, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { BrowserRouter } from "react-router-dom";
+import { socketMiddleware } from "./services/middleware/socketMiddleware";
 
  const composeEnhancers =
    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
      : compose; 
-  
-const enhancer = composeEnhancers(applyMiddleware(thunk));
+
+
+const enhancer = composeEnhancers(applyMiddleware(thunk, socketMiddleware()) );
+
 
 const store = createStore(rootReducer, enhancer); 
 

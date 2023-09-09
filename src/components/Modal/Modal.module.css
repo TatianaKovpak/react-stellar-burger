@@ -1,5 +1,7 @@
 .modal {
  display: none;
+ position: relative;
+
 }
 
 .modal__active {
@@ -18,7 +20,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1;
+    z-index: 999;
 }
 
 
