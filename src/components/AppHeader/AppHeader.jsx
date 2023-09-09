@@ -1,28 +1,35 @@
 import { Logo, BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import AppHeaderStyles from './AppHeader.module.css'
+import { Link, NavLink, useMatch } from 'react-router-dom'
 
 function AppHeader () {
+  const profileMatch = useMatch('/profile')
+  const constructorMatch = useMatch('/')
+  const feedMatch = useMatch('/feed')
+  
+  
     return (
         <header className={AppHeaderStyles.header}>
             <nav className={AppHeaderStyles.menu}>
-              <a href="" className={AppHeaderStyles.link}>
-                <BurgerIcon type="primary"/>
-                <p className={`${AppHeaderStyles.title } text text_type_main-default `}>Конструктор</p> 
-              </a>
-              <a href="" className={AppHeaderStyles.link}>
-                <ListIcon type="secondary" />
-                <p className={`${AppHeaderStyles.title } text text_type_main-default text_color_inactive`}>Лента заказов</p>
-              </a>
+              <NavLink to={{pathname: '/'}}  className={({isActive}) => isActive ? AppHeaderStyles.active : AppHeaderStyles.link }>
+              
+                <BurgerIcon type={constructorMatch !== null ? 'primary' : 'secondary'}  />
+                Конструктор
+              </NavLink>
+              <NavLink to={'/feed'} className={({isActive}) => isActive ? AppHeaderStyles.active : AppHeaderStyles.link }>
+                <ListIcon type={feedMatch !== null ? 'primary' : 'secondary'} />
+                Лента заказов
+              </NavLink>
             </nav>
-            <div className={AppHeaderStyles.logo}><Logo /></div>
+            <Link to={{pathname: '/'}}>
+            <div className={AppHeaderStyles.logo} ><Logo /></div>
+            </Link>
             
-            <a href="" className={AppHeaderStyles.link}>
-              <ProfileIcon type="secondary" />
-              <p className={`${AppHeaderStyles.title } text text_type_main-default text_color_inactive`}>Личный кабинет</p> 
-            </a>
+            <NavLink to={{pathname: "/profile"}} className={({isActive}) => isActive ? AppHeaderStyles.active : AppHeaderStyles.link }>
+              <ProfileIcon type={profileMatch !== null ? 'primary' : 'secondary'}  />
+              Личный кабинет
+            </NavLink>
 
-           
-            
         </header>
     
     )

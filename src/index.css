@@ -8,3 +8,7 @@ body {
 .modals {
   position: relative;
 }
+
+.active {
+  color: #F2F2F3;
+}

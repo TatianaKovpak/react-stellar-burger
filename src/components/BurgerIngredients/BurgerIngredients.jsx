@@ -6,15 +6,14 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredientsFromServer } from '../../services/actions/ingredientsActions';
 import { useDrag } from 'react-dnd';
-import Modal from '../Modal/Modal';
-import IngredientDetails from '../IngredientDetails/IngredientDetails';
+import { Link, useLocation } from 'react-router-dom';
 
 
 
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.ingredients.ingredients)
-    const modal = useSelector(state => state.modal)
+    const dispatch = useDispatch()
 
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
@@ -35,22 +34,20 @@ function BurgerIngredients () {
         }
       }
 
-      function closePopup () {
-        dispatch({
-            type: 'CLOSE_MODAL'
-        })
-    }
-
-    const dispatch = useDispatch()
-
     React.useEffect(() => {
         dispatch(getIngredientsFromServer())
     }, [dispatch])
+
+    let bun = {}
+    let sauce = {}
+    let main = {}
+
+    useMemo(() => {
+      bun = ingredients.filter( i => i.type === 'bun')
+      sauce = ingredients.filter( i => i.type === 'sauce')
+      main = ingredients.filter(i => i.type === 'main')
+    }, [bun, sauce, main, ingredients])
  
-    const bun = useMemo(() => ingredients.filter( i => i.type === 'bun'), [ingredients] ) ;
-    const sauce = useMemo(() => ingredients.filter( i => i.type === 'sauce'), [ingredients] ) ;
-    const main = useMemo(() => ingredients.filter(i => i.type === 'main'), [ingredients] ) 
-    
 
     return (
          <section className={BurgerIngredientsStyles.section}>
@@ -69,9 +66,7 @@ function BurgerIngredients () {
                  <h2 className={`${BurgerIngredientsStyles.subtitle} text text_type_main-default`} ref={refOfMain}>Начинки</h2>
                  <IngredientContainer  arr={main} />
             </div>   
-            <Modal onClose= {() => closePopup()} isOpened={modal.isIngredient}>
-                {modal.isIngredient && <IngredientDetails  ingredient = {modal.content}/>}
-            </Modal>  
+            
             
         </section>       
     )
@@ -96,7 +91,8 @@ const IngredientContainer = ({arr}) => {
    const counter = useMemo(() => addedIngredient.filter(item => item._id === _id).length, [addedIngredient]) 
 
     const dispatchModal = useDispatch()
-   
+    const location = useLocation()
+    
     const [{opacity}, dragRef] = useDrag({
         type: 'ingredient',
         item: {_id, props},
@@ -110,25 +106,24 @@ const IngredientContainer = ({arr}) => {
             type: 'OPEN_MODAL_INGREDIENT',
             payload: props
         })
-   
     } 
 
-   
     return (
+        <Link to={{pathname:`/ingredient/:${_id}`}} state={{ background: location }} className={BurgerIngredientsStyles.link}>
         <div className={BurgerIngredientsStyles.ingredient} onClick={() => openPopup()} ref={dragRef} style={{opacity}}>
-            
             <img src={props.image} alt={props.name} />
             <div className={BurgerIngredientsStyles.box} >
                <p className={`${BurgerIngredientsStyles.ingredient__price} text text_type_digits-default`}>{props.price}</p>
                <div className={BurgerIngredientsStyles.ingredient__icon}>
-               <CurrencyIcon type="primary" />
+                 <CurrencyIcon type="primary" />
                </div>
             </div>
             <div className={BurgerIngredientsStyles.ingredient__counter}>
-            <Counter count={counter} />
+              <Counter count={counter} />
             </div>
             <p className={`${BurgerIngredientsStyles.ingredient__title} text text_type_main-default`}>{props.name}</p>
-        </div>  
+        </div> 
+        </Link> 
     )
  }
  BurgerIngredients.propTypes = {

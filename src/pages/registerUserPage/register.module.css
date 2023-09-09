@@ -1,0 +1,23 @@
+.page {
+    display: grid;
+   row-gap: 24px;
+   align-items: center;
+   justify-items: center;
+}
+.title {
+    margin-top: 180px;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+    
+}
+.link__title {
+    margin: 0;
+}
+.link {
+    text-decoration: none;
+   color: #4C4CFF;
+}
+.button {
+    margin-bottom: 56px;
+}

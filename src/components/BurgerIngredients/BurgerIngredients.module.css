@@ -105,3 +105,8 @@
   width: 32px;
   height: 32px;
 }
+
+.link {
+  text-decoration: none;
+  color: #F2F2F3;
+}

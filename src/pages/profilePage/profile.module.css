@@ -1,0 +1,53 @@
+.page {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    margin-top: 120px;
+}
+
+.navigate {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputs {
+    display: grid;
+    margin-left: 60px;
+    
+}
+.text {
+    width: 320px;
+    margin-top: 80px;
+
+}
+
+.link {
+    text-decoration: none;
+    width: 320px;
+    height: 64px;
+    color: #8585AD;
+    font-weight: 700;
+    line-height: 30px;
+    font-size: 24px;
+    font-family: 'Jet Brains Mono';
+}
+
+.active {
+    color: #F2F2F3;
+    text-decoration: none;
+    width: 320px;
+    height: 64px;
+    font-weight: 700;
+    line-height: 30px;
+    font-size: 24px;
+    font-family: 'Jet Brains Mono';
+    
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
