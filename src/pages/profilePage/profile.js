@@ -31,9 +31,7 @@ useEffect(() => {
     dispatch(disconnect())
 
 })
-}, [dispatch, token])
-
-
+}, [dispatch, url])
 
 const clearValue = () => {
   setValue({name: user.name, email: user.email, password: ''})
@@ -79,7 +77,7 @@ const logout = () => {
           :
           <div className={ProfilePageStyles.inputs}>
           <div className={`custom-scroll ${ProfilePageStyles.scroll} `}>
-              <Order allOrders={allOrders}/>
+              <Order/>
           </div>
           </div>
 }

@@ -17,7 +17,7 @@ export const ProtectedRouteElement = ({ onlyUnAuth = false, element }) => {
   
   if (onlyUnAuth && isAuthChecked) {
     const { from } = location.state || { from: { pathname: "/" } };
-    return <Navigate to={from}/>;
+    return <Navigate to={from} />;
   }
   
   if (!onlyUnAuth && !isAuthChecked) {

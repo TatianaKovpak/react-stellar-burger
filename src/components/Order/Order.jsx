@@ -5,24 +5,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from "prop-types";
 
-function Order (allOrders) {
+function Order () {
+  const allOrders = useSelector((state) => state.orders.allOrders)
   const ingredients = useSelector((state) => state.ingredients.ingredients)
   const dispatch = useDispatch()
   const location = useLocation()
- 
 
-
-  
   const orderIngredients = []
   
-
-
-
-  if(allOrders.allOrders.orders) {
-    orderIngredients.push(...allOrders.allOrders.orders.map(i =>  i.ingredients ))
+  if(allOrders.orders) {
+    orderIngredients.push(...allOrders.orders.map(i =>  i.ingredients ))
     
   }
-
   const ingredientsWithData = orderIngredients.map(item => {
     
     return item.map(item2 => {
@@ -39,10 +33,12 @@ function Order (allOrders) {
 
     return (
         <>
-        {allOrders.allOrders.orders && allOrders.allOrders.orders.map((i, index) => {
+        {allOrders.orders && allOrders.orders.map((i, index) => {
             return (
-              <Link key={index} to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
-              <div key={i.number} className={orderStyles.order} onClick={() => openPopup() }>
+              <div key={i.number}>
+              {!i.ingredients.includes(null) &&
+              <Link  to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
+              <div  className={orderStyles.order} onClick={() => openPopup() }>
                 <div className={orderStyles.order__info}>
                 <p className={`text text_type_main-small ${orderStyles.order__number}`}>{`#${i.number}`}</p>
                 <p className={`text text_type_main-small text_color_inactive`}><FormattedDate date={new Date(i.updatedAt)}/></p>
@@ -51,11 +47,13 @@ function Order (allOrders) {
               <ul className={orderStyles.images}>
               
                 {ingredientsWithData.length && ingredientsWithData[index].map((item, index, arr) => { 
+                  
                   const deletedElemArr = arr.length - 6
-
                        return (
+
                         <li key={item._id + index + i.number} className={orderStyles.image__background}>
                           {arr.length > 6 ?
+                          
                           <div  className={orderStyles.image}> 
                              
                              <img  src={item.image} alt={item.name}  className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`}/>
@@ -67,7 +65,8 @@ function Order (allOrders) {
                                 <img  src={item.image} alt={item.name} key={item._id + index + i.number} className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`} />
                             </div>
         }
-                        </li>    
+                        </li>   
+                                   
                       )
                     }).slice(0,6)
                     
@@ -80,6 +79,8 @@ function Order (allOrders) {
               </ul>
               </div>
               </Link>
+        }
+        </div>
             )
         })
 }

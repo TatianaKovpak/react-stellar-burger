@@ -21,11 +21,7 @@ const onChange = (e) => {
 const submitForm = (e) => {
   e.preventDefault();
   dispatch(userAuthorization(value))
-  /*.then((res) => {
-    if(res && res.success) {
-      navigate('/')
-    }
-  })*/
+  
   
 }
 

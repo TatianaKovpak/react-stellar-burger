@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { connect, disconnect } from '../../services/actions/socketMiddlewareActions'
 
 
+
 export function FeedPage () {
     const allOrders = useSelector(state => state.orders.allOrders)
     const dispatch = useDispatch()
@@ -12,27 +13,25 @@ export function FeedPage () {
 
     let ordersDone
     let ordersInProgress
-    let key
-
 
     useEffect(() => {
         dispatch(connect(url))
+      
         return (() => {
-            dispatch(disconnect())
-        })
-        
-      }, [dispatch])
+          dispatch(disconnect())
+      
+      })
+      }, [dispatch, url])
 
    
 
     if(allOrders.orders) {
         ordersDone = allOrders.orders.filter(i => i.status === 'done')
         ordersInProgress = allOrders.orders.filter(i => i.status === 'created')
-        key = allOrders.orders.map(i => i.number)
     }
 
     return (
-        <>
+        <> 
         {allOrders.orders &&
         <>
         <h2 className={`text text_type_main-large ${feedPageStyles.title}`}>Лента заказов</h2>
@@ -40,16 +39,17 @@ export function FeedPage () {
         
         
         <div className={`custom-scroll ${feedPageStyles.scroll} `}>
-                    <Order allOrders={allOrders} />
-                   
+                    <Order />
         </div>
         <div className={feedPageStyles.info}>
             <div className={feedPageStyles.orders__list}>
                 <div >
                     <p className={`text text_type_main-default`}>Готовы:</p>
                     <div className={`custom-scroll text text_type_main-small ${feedPageStyles.orders__number} ${feedPageStyles.orders__number_done}`}>
-                    {ordersDone.map((i) => {
-                        return <div key={i.number} >{i.number}</div>
+                    {ordersDone.map(i => {
+                        return (
+                            <div key={i.number}>{i.number}</div>
+                        )
                     })}
                     </div>
                 </div>
@@ -57,7 +57,9 @@ export function FeedPage () {
                     <p className={`text text_type_main-default`}>В работе:</p>
                     <div className={`custom-scroll text text_type_main-small ${feedPageStyles.orders__number}`}>
                     {ordersInProgress.map(i => {
-                        return <div  >{i.number}</div>
+                        return (
+                            <div key={i.number} >{i.number}</div>
+                        )
                     })}
                     </div>
                 </div>
