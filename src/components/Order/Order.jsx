@@ -38,7 +38,7 @@ function Order () {
               <div key={i.number}>
               {!i.ingredients.includes(null) &&
               <Link  to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
-              <div  className={orderStyles.order} onClick={() => openPopup() }>
+              <div className={orderStyles.order} onClick={() => openPopup() }>
                 <div className={orderStyles.order__info}>
                 <p className={`text text_type_main-small ${orderStyles.order__number}`}>{`#${i.number}`}</p>
                 <p className={`text text_type_main-small text_color_inactive`}><FormattedDate date={new Date(i.updatedAt)}/></p>
@@ -48,7 +48,7 @@ function Order () {
               
                 {ingredientsWithData.length && ingredientsWithData[index].map((item, index, arr) => { 
                   
-                  const deletedElemArr = arr.length - 6
+                  const deletedElemArr = arr.length - 5
                        return (
 
                         <li key={item._id + index + i.number} className={orderStyles.image__background}>
