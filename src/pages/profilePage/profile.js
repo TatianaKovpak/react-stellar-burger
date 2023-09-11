@@ -42,8 +42,9 @@ const onChange = (e) => {
   setValue({...value, [e.target.name] : e.target.value})
 }
 
-const submitForm = () => {
-      dispatch(refreshUserData(value))
+const submitForm = (evt) => {
+  evt.preventDefault()
+  dispatch(refreshUserData(value))
 }
 
 const logout = () => {
@@ -66,15 +67,15 @@ const logout = () => {
            <p className={`${ProfilePageStyles.text} text text_type_main-small text_color_inactive`}>В этом разделе вы можете изменить свои персональные данные</p>
           </div>
           {location.pathname === '/profile' ? 
-          <div className={ProfilePageStyles.inputs}>
+          <form className={ProfilePageStyles.inputs} onSubmit={submitForm}>
             <Input onChange={onChange} name="name" value={value.name} placeholder='Имя'/>
             <EmailInput onChange={onChange} value={value.email} name="email" placeholder='Логин'/>
             <PasswordInput onChange={onChange} name="password" value={value.password} placeholder='Пароль' />
             <div className={ProfilePageStyles.buttons}>
               <Button htmlType="button" type="secondary" size="small" onClick={() => clearValue()}>Отмена</Button>
-              <Button htmlType="button" type="primary" size="small" extraClass="ml-2" onClick={() => submitForm()}>Сохранить</Button>
+              <Button htmlType="submit" type="primary" size="small" extraClass="ml-2">Сохранить</Button>
             </div>
-          </div> 
+          </form> 
           :
           <div className={ProfilePageStyles.inputs}>
           <div className={`custom-scroll ${ProfilePageStyles.scroll} `}>

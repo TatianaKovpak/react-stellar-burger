@@ -32,7 +32,9 @@ export const ISAUTHORIZATION_REQEST = 'ISAUTHORIZATION_REQEST'
 
 
 
+
 export const userRegistration = (value) => {
+
     return function(dispatch) {
         dispatch({
             type: REGISTRATION_REQUEST
@@ -44,6 +46,7 @@ export const userRegistration = (value) => {
                     type: REGISTRATION_SUCCESS,
                     
                 })
+
             } else {
                 dispatch({
                     type: REGISTRATION_FAILED

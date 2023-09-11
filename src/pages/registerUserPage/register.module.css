@@ -21,3 +21,9 @@
 .button {
     margin-bottom: 56px;
 }
+.form {
+    display: grid;
+    row-gap: 24px;
+    align-items: center;
+    justify-items: center;
+}
