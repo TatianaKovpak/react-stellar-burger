@@ -4,7 +4,6 @@ import BurgerIngredientsStyles from './BurgerIngredients.module.css'
 import { ingredientPropType } from '../../utils/prop-types';
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
-import { getIngredientsFromServer } from '../../services/actions/ingredientsActions';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -13,8 +12,7 @@ import { Link, useLocation } from 'react-router-dom';
 function BurgerIngredients () {
     const [currentTab, setCurrentTab] = React.useState('bun')
     const ingredients = useSelector((state) => state.ingredients.ingredients)
-    const dispatch = useDispatch()
-
+  
     const refOfTab = useRef(currentTab)
     const refOfBun = useRef(null)
     const refOfSauce = useRef(null)
@@ -34,9 +32,6 @@ function BurgerIngredients () {
         }
       }
 
-    React.useEffect(() => {
-        dispatch(getIngredientsFromServer())
-    }, [dispatch])
 
     let bun = {}
     let sauce = {}

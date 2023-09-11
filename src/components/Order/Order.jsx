@@ -9,7 +9,7 @@ function Order (allOrders) {
   const ingredients = useSelector((state) => state.ingredients.ingredients)
   const dispatch = useDispatch()
   const location = useLocation()
-  
+ 
 
 
   
@@ -29,11 +29,6 @@ function Order (allOrders) {
      return ingredients.filter(elem => item2 === elem._id)[0]
     })
   })
-  
-  const buns = useMemo(() => ingredientsWithData.filter(i => i.type === 'bun'), [ingredientsWithData])
-  
-  
-  
 
   function openPopup () {
     dispatch({
@@ -46,8 +41,8 @@ function Order (allOrders) {
         <>
         {allOrders.allOrders.orders && allOrders.allOrders.orders.map((i, index) => {
             return (
-              <Link key={i.number} to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
-              <div  className={orderStyles.order} onClick={() => openPopup() }>
+              <Link key={index} to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
+              <div key={i.number} className={orderStyles.order} onClick={() => openPopup() }>
                 <div className={orderStyles.order__info}>
                 <p className={`text text_type_main-small ${orderStyles.order__number}`}>{`#${i.number}`}</p>
                 <p className={`text text_type_main-small text_color_inactive`}><FormattedDate date={new Date(i.updatedAt)}/></p>
@@ -59,11 +54,11 @@ function Order (allOrders) {
                   const deletedElemArr = arr.length - 6
 
                        return (
-                        <li key={item._id + index} className={orderStyles.image__background}>
-                          {/*index === 5 &&*/ arr.length > 6 ?
+                        <li key={item._id + index + i.number} className={orderStyles.image__background}>
+                          {arr.length > 6 ?
                           <div  className={orderStyles.image}> 
                              
-                             <img  src={item.image} alt={item.name} key={item._id + index + i.number} className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`}/>
+                             <img  src={item.image} alt={item.name}  className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`}/>
                              <p className={`text text_type_digits-default ${index === 5 ? orderStyles.count__visible : orderStyles.count}`}>{`+${deletedElemArr}`}</p>
                          </div>
                           
@@ -78,7 +73,7 @@ function Order (allOrders) {
                     
                }
               
-               <p className={`text text_type_main-default ${orderStyles.total}`}>{ingredientsWithData[index].reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price ,0 ,0)}
+               <p className={`text text_type_main-default ${orderStyles.total}`}>{ingredientsWithData[index].reduce((acc, item) => item.type === 'bun' && ingredientsWithData[index].filter(i => i.type === 'bun').length < 2 ?  acc + (item.price * 2) : acc + item.price  ,0)}
                <CurrencyIcon type="primary" />
                </p>
                

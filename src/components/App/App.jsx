@@ -8,9 +8,10 @@ import { ResetPasswordPage } from "../../pages/resetPasswordPage/reset-password"
 import { ProfilePage } from "../../pages/profilePage/profile";
 import { NotFound404 } from "../../pages/notFoundPage/404";
 import { OrderDetailsPage } from "../../pages/orderDetailsPage/orderDetailsPage";
+import { useEffect } from 'react'
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import Modal from "../Modal/Modal";
-
+import { getIngredientsFromServer } from "../../services/actions/ingredientsActions";
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRouteElement";
 import { useDispatch, useSelector } from "react-redux";
 import { IngredientDetailsPage } from "../../pages/ingredientDetailsPage/ingredient-details";
@@ -23,7 +24,15 @@ function App() {
   const location = useLocation()
   const navigate = useNavigate()
   const background = location.state && location.state.background; 
+
   
+  useEffect(() => {
+    dispatch(getIngredientsFromServer())
+    dispatch( {type: location.pathname.includes('/feed')  ? 'OPEN_MODAL_ORDER_DETAILS' : ''}   )
+    dispatch({type: location.pathname.includes('/ingredient')  ? 'OPEN_MODAL_INGREDIENT' : ''})
+
+    
+  }, [dispatch, location])
 
   function closePopup (e) {
    navigate(-1)
@@ -48,8 +57,7 @@ function App() {
       <Route path="/ingredient/:id" element={<IngredientDetailsPage/>}/>
       <Route path="/profile" element={<OnlyAuth element = {<ProfilePage/>}/>}/>
       <Route path="/profile/orders" element={<OnlyAuth element={<ProfilePage/>}/>}/>
-      <Route path="/profile/orders/:number" element={<OrderDetailsPage/>}/>
-     
+      <Route path="/profile/orders/:number" element={<OnlyAuth element = {<OrderDetailsPage/>}/>}/>
       <Route path="/feed" element={<FeedPage/>}/>
       <Route path="/feed/:number"element = {<OrderDetailsPage/>}/>
       <Route path="*" element={<NotFound404/>} />

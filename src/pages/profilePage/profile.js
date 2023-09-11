@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {logoutAction, refreshUserData } from '../../services/actions/userActions';
 import Order from '../../components/Order/Order';
+import { connect, disconnect } from '../../services/actions/socketMiddlewareActions';
 
 
 export function ProfilePage () {
@@ -12,8 +13,9 @@ export function ProfilePage () {
   const allOrders = useSelector(state => state.orders.allOrders)
   const dispatch = useDispatch()
   const location = useLocation()
-
   const token = localStorage.getItem('accessToken').replace('Bearer ', '')
+  const url = `wss://norma.nomoreparties.space/orders?token=${token}`
+
   let key
    
   const [value, setValue] = React.useState({
@@ -23,9 +25,12 @@ export function ProfilePage () {
 })
 
 useEffect(() => {
-  dispatch({type: 'WS_CONNECTION_START', payload : `wss://norma.nomoreparties.space/orders?token=${token}`})
-  
+  dispatch(connect(url))
 
+  return (() => {
+    dispatch(disconnect())
+
+})
 }, [dispatch, token])
 
 
@@ -73,8 +78,7 @@ const logout = () => {
           :
           <div className={ProfilePageStyles.inputs}>
           <div className={`custom-scroll ${ProfilePageStyles.scroll} `}>
-              <Order key={key} allOrders={allOrders}/>
-
+              <Order allOrders={allOrders}/>
           </div>
           </div>
 }

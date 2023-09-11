@@ -1,9 +1,9 @@
 import { useDispatch, useSelector} from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
-import { getIngredientsFromServer } from "../../services/actions/ingredientsActions";
 import  { useEffect } from 'react';
 import orderDetailsPageStyles from './orderDetailsPage.module.css'
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
+import { connect, disconnect } from "../../services/actions/socketMiddlewareActions";
 
 
 
@@ -12,14 +12,20 @@ export function OrderDetailsPage () {
     const ingredients = useSelector((state) => state.ingredients.ingredients)
     const dispatch = useDispatch()
     const location = useLocation()
-    const token = localStorage.getItem('accessToken').replace('Bearer ', '')
+    const token = localStorage.getItem('accessToken')
+    const url = location.pathname.includes('/feed/') ? `wss://norma.nomoreparties.space/orders/all` : token ? `wss://norma.nomoreparties.space/orders?token=${token.replace('Bearer ', '') }` : ''
+    
+    
     
     
     useEffect(() => {
-       
-        dispatch({type: 'WS_CONNECTION_START', payload : location.pathname.includes('/feed/') ? `wss://norma.nomoreparties.space/orders/all` : `wss://norma.nomoreparties.space/orders?token=${token}`})
-        dispatch(getIngredientsFromServer())
-      }, [dispatch, token, location.pathname])
+        dispatch(connect(url))
+        return (() => {
+            dispatch(disconnect())
+        })
+        
+     
+      }, [dispatch, url])
 
     const params = useParams()
     const number = Number(params.number.slice(1))
@@ -44,7 +50,7 @@ export function OrderDetailsPage () {
          })
          const buns = ingredientsWithData.filter(i => i.type === 'bun')
          
-         totalPrice = ingredientsWithData.reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price ,0)
+         totalPrice = ingredientsWithData.reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price  ,0)
 
         uniqueIngredients = ingredientsWithData.reduce((acc, item) => {
             if (acc.includes(item)) {

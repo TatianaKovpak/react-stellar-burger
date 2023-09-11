@@ -1,4 +1,4 @@
-import { WS_CONNECTION_CLOSED, WS_CONNECTION_ERROR,  WS_GET_MESSAGE, WS_CONNECTION_SUCCESS } from "../actions/socketMiddlewareActions"
+import { WS_CONNECTION_CLOSED, WS_CONNECTION_ERROR,  WS_GET_MESSAGE, WS_CONNECTION_SUCCESS, WS_CONNECTION_OPEN } from "../actions/socketMiddlewareActions"
 
 
 
@@ -21,6 +21,12 @@ export const socketMiddlewareReducer = (state = initialState, action) => {
                 ...state,
                 error: action.payload,
                 wsConnected: false
+            }
+        }
+        case WS_CONNECTION_OPEN: {
+            return {
+                ...state,
+                wsConnected: true
             }
         }
         case WS_CONNECTION_CLOSED: {
