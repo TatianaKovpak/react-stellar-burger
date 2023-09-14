@@ -1,9 +1,10 @@
 import { Button, EmailInput, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components"
-import { Link, useNavigate} from "react-router-dom"
+import { Link} from "react-router-dom"
 import LoginPageStyles from "./login.module.css"
 import React, { useEffect } from 'react';
 import { userAuthorization } from "../../services/actions/userActions";
 import { useDispatch } from "react-redux";
+import { CLOSE_MODAL } from "../../services/actions/modalActions";
 
 
 
@@ -13,7 +14,7 @@ export function LoginPage () {
     email : '',
     password : ''
 })
-const navigate = useNavigate()
+
 const onChange = (e) => {
     setValue({...value, [e.target.name] : e.target.value})
 }
@@ -27,7 +28,7 @@ const submitForm = (e) => {
 
 useEffect(() => {
   dispatch({
-    type: 'CLOSE_MODAL'
+    type: CLOSE_MODAL
 })
 }, [dispatch])
 

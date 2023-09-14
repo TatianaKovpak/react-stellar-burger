@@ -2,20 +2,18 @@ import { useEffect} from "react";
 import ModalStyles from './Modal.module.css'
 import ReactDOM from "react-dom";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
-import { useNavigate, useLocation } from "react-router-dom";
 
 
 const modalRoot = document.getElementById('modals');
 
 function Modal (props) {
-    const location = useLocation()
 
     useEffect(() => {
         document.addEventListener('keydown', closeByEscape)
         
         return (() => {
             document.removeEventListener('keydown', closeByEscape)
-        })}, [])
+        })}, [closeByEscape])
         
     function closeByEscape(evt) {
         if (evt.key === 'Escape') {

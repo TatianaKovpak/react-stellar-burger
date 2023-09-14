@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
+import { OPEN_MODAL_INGREDIENT } from '../../services/actions/modalActions';
 
 
 
@@ -98,7 +99,7 @@ const IngredientContainer = ({arr}) => {
 
     function openPopup () {
         dispatchModal({
-            type: 'OPEN_MODAL_INGREDIENT',
+            type: OPEN_MODAL_INGREDIENT,
             payload: props
         })
     } 

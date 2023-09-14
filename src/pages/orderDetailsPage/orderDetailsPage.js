@@ -60,7 +60,7 @@ export function OrderDetailsPage () {
         }, []) 
         
      }
- 
+
     return (
         <div className={orderDetailsPageStyles.page}>
         {allOrders.orders &&

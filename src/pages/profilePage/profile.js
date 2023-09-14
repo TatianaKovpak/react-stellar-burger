@@ -10,28 +10,30 @@ import { connect, disconnect } from '../../services/actions/socketMiddlewareActi
 
 export function ProfilePage () {
   const user = useSelector((state) => state.user.user)
-  const allOrders = useSelector(state => state.orders.allOrders)
   const dispatch = useDispatch()
   const location = useLocation()
   const token = localStorage.getItem('accessToken').replace('Bearer ', '')
   const url = `wss://norma.nomoreparties.space/orders?token=${token}`
-
-  let key
    
   const [value, setValue] = React.useState({
-    name : user.name,
-    email : user.email,
+    name : '',
+    email : '',
     password : ''
 })
 
 useEffect(() => {
   dispatch(connect(url))
+  setValue({
+    name : user.name,
+    email : user.email,
+    password : ''
+  })
 
   return (() => {
     dispatch(disconnect())
 
 })
-}, [dispatch, url])
+}, [dispatch, url, user])
 
 const clearValue = () => {
   setValue({name: user.name, email: user.email, password: ''})
@@ -49,11 +51,11 @@ const logout = () => {
     dispatch(logoutAction())
   }
 
-  if(allOrders.orders) {
-    allOrders.orders.reverse()
+  /*if(allOrders.orders) {
+    /*allOrders.orders.reverse()
     key = allOrders.orders.map(i => i.number)
     
-  }
+  }*/
 
 
     return (
@@ -66,9 +68,9 @@ const logout = () => {
           </div>
           {location.pathname === '/profile' ? 
           <form className={ProfilePageStyles.inputs} onSubmit={submitForm}>
-            <Input onChange={onChange} name="name" value={value.name} placeholder='Имя'/>
-            <EmailInput onChange={onChange} value={value.email} name="email" placeholder='Логин'/>
-            <PasswordInput onChange={onChange} name="password" value={value.password} placeholder='Пароль' />
+            <Input onChange={onChange} name="name" value={value.name ? value.name : ''} placeholder='Имя'/>
+            <EmailInput onChange={onChange} value={value.email ? value.email : ''} name="email" placeholder='Логин'/>
+            <PasswordInput onChange={onChange} name="password" value={value.password ? value.password : ''} placeholder='Пароль' />
             <div className={ProfilePageStyles.buttons}>
               <Button htmlType="button" type="secondary" size="small" onClick={() => clearValue()}>Отмена</Button>
               <Button htmlType="submit" type="primary" size="small" extraClass="ml-2">Сохранить</Button>

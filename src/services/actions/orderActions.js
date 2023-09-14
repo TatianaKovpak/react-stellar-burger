@@ -3,6 +3,7 @@ import { postOrder, refreshTokenRequest } from "../../utils/api-burger";
 export const ORDER_CHECKOUT_REQUEST = 'ORDER_CHECKOUT_REQUEST';
 export const ORDER_CHECKOUT_FAILED = 'ORDER_CHECKOUT_FAILED';
 export const ORDER_CHECKOUT_SUCCESS = 'ORDER_CHECKOUT_SUCCESS';
+export const CLEAR_ORDER = 'CLEAR_ORDER'
 
 export function getOrderData(arr) {
     const accessToken = localStorage.getItem('accessToken')

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
-import  {useMemo } from 'react';
 import orderStyles from './OrderStyles.module.css'
 import { Link, useLocation } from 'react-router-dom';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from "prop-types";
+import { OPEN_MODAL_ORDER_DETAILS } from '../../services/actions/modalActions';
 
 function Order () {
   const allOrders = useSelector((state) => state.orders.allOrders)
@@ -23,17 +23,22 @@ function Order () {
      return ingredients.filter(elem => item2 === elem._id)[0]
     })
   })
+  // useEffect(() => {
+  //   openPopup()
+  // })
 
   function openPopup () {
     dispatch({
-        type: 'OPEN_MODAL_ORDER_DETAILS',
+        type: OPEN_MODAL_ORDER_DETAILS,
      })
+     
 } 
 
 
     return (
         <>
         {allOrders.orders && allOrders.orders.map((i, index) => {
+    
             return (
               <div key={i.number}>
               {!i.ingredients.includes(null) &&

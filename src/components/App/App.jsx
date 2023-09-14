@@ -1,5 +1,5 @@
 import AppHeader from "../AppHeader/AppHeader";
-import { Routes, Route, useLocation, useNavigate, Router} from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate} from 'react-router-dom';
 import { HomePage } from "../../pages/homePage/home";
 import { LoginPage } from "../../pages/loginUserPage/login";
 import { RegisterPage } from "../../pages/registerUserPage/register";
@@ -16,7 +16,7 @@ import { OnlyAuth, OnlyUnAuth } from "../ProtectedRouteElement";
 import { useDispatch, useSelector } from "react-redux";
 import { IngredientDetailsPage } from "../../pages/ingredientDetailsPage/ingredient-details";
 import { FeedPage } from "../../pages/feedPage/feed";
-import Order from "../Order/Order";
+import { CLOSE_MODAL, OPEN_MODAL_INGREDIENT, OPEN_MODAL_ORDER_DETAILS } from "../../services/actions/modalActions";
 
 function App() {
   const modal = useSelector(state => state.modal)
@@ -25,11 +25,12 @@ function App() {
   const navigate = useNavigate()
   const background = location.state && location.state.background; 
 
-  
+
   useEffect(() => {
     dispatch(getIngredientsFromServer())
-    dispatch( {type: location.pathname.includes('/feed')  ? 'OPEN_MODAL_ORDER_DETAILS' : ''}   )
-    dispatch({type: location.pathname.includes('/ingredient')  ? 'OPEN_MODAL_INGREDIENT' : ''})
+    dispatch( {type: location.pathname.includes('/feed')  ?  OPEN_MODAL_ORDER_DETAILS: ''}   )
+    dispatch({type: location.pathname.includes('/ingredient')  ? OPEN_MODAL_INGREDIENT : ''})
+    dispatch({type: location.pathname.includes('/profile' ) ?  OPEN_MODAL_ORDER_DETAILS : ''})
 
     
   }, [dispatch, location])
@@ -37,8 +38,9 @@ function App() {
   function closePopup (e) {
    navigate(-1)
     dispatch({
-        type: 'CLOSE_MODAL'
+        type: CLOSE_MODAL
     });
+   
 }
 
 

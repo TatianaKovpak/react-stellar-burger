@@ -1,4 +1,3 @@
-
 const url = 'https://norma.nomoreparties.space/api';
 const token = localStorage.getItem("refreshToken")
 
@@ -13,7 +12,6 @@ function checkResponse(res) {
 export function getIngredients () {
     return fetch(`${url}/ingredients`)
     .then(checkResponse)
-    .catch(err => console.log(err))
 }
 
 export function postOrder (arr, token) {
@@ -121,8 +119,6 @@ export const refreshUserDataRequest = (token, form) => {
     },
     body : JSON.stringify(form)
   }) .then(checkResponse)
-    
-  
 }
 
 export const logoutRequest = () => {

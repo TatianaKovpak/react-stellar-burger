@@ -7,8 +7,10 @@ import { useDrop, useDrag } from 'react-dnd';
 import Modal from '../Modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderDetails from "../OrderDetails/OrderDetails";
-import { getOrderData } from '../../services/actions/orderActions';
+import { CLEAR_ORDER, getOrderData } from '../../services/actions/orderActions';
 import { OnlyAuth} from '../ProtectedRouteElement';
+import { CLOSE_MODAL, OPEN_MODAL_ORDER } from '../../services/actions/modalActions';
+import { ADD_SELECTED_INGREDIENT, CHANGE_BUN, CLEAR_CONSTRUCTOR, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS } from '../../services/actions/ingredientsActions';
 
 export  const initialState = {
     totalPrice: 0,
@@ -48,18 +50,24 @@ function BurgerConstructor () {
         if(addedIngredient.length > 0 && isAuthChecked) {
             dispatch(getOrderData(addedIngredient.map(i => i._id)))
             dispatch({
-              type: 'OPEN_MODAL_ORDER',  
+              type:  OPEN_MODAL_ORDER,  
         })
         } else if(!isAuthChecked){
             dispatch({
-                type: 'OPEN_MODAL_ORDER',  
+                type: OPEN_MODAL_ORDER,  
             })
         }
     }
 
     function closePopup () {
         dispatch({
-            type: 'CLOSE_MODAL'
+            type:  CLOSE_MODAL
+        })
+        dispatch({
+           type: CLEAR_CONSTRUCTOR
+        })
+        dispatch({
+            type: CLEAR_ORDER
         })
     }
 
@@ -105,7 +113,7 @@ const BurgerIngredientsConstructor = ({arr}) => {
 
      const removeItem = item => {
         dispatch({
-          type: 'DELETE_SELECTED_INGREDIENT',
+          type:  DELETE_SELECTED_INGREDIENT,
           payload: item.id
         });
       };
@@ -118,12 +126,12 @@ const BurgerIngredientsConstructor = ({arr}) => {
         drop(item) {
              if (item.props.type !== 'bun') {
                 dispatch({
-                    type: 'ADD_SELECTED_INGREDIENT',
+                    type: ADD_SELECTED_INGREDIENT,
                     payload: item.props
                 }) 
             } else {
                 dispatch({
-                    type: 'CHANGE_BUN',
+                    type:  CHANGE_BUN,
                     payload: item._id
                 })
             }  
@@ -159,7 +167,7 @@ const BurgerIngredient = ({props, handleClose, index, id, i}) => {
             })
 
             dispatch({
-                type: 'SORT_SELECTED_INGREDIENTS',
+                type:  SORT_SELECTED_INGREDIENTS,
                 payload: newAddedIngredients
             });
        };

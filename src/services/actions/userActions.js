@@ -107,7 +107,8 @@ export const getUserData = () => {
             if(res && res.success) {
                  dispatch({
                      type: GET_USER_SUCCESS,
-                     user: res.user
+                     user: res.user,
+                     isAuth: true
                  })
             } else {
                 dispatch({

@@ -2,7 +2,6 @@ import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-comp
 import ForgotPasswordPageStyles from './forgotPasword.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 import React from 'react';
-/*import { useDispatch } from 'react-redux';*/
 import { forgotPasswordRequest } from '../../utils/api-burger';
 
 
@@ -11,14 +10,12 @@ export function ForgotPasswordPage() {
        email : '',
 })
 const navigate = useNavigate()
-/*const dispatch = useDispatch()*/
 const onChange = (e) => {
   setValue({...value, [e.target.name] : e.target.value})
 }
 
 const submitForm = (event) => {
   event.preventDefault()
-  /*dispatch(forgotPassword(value))*/
   forgotPasswordRequest(value)
   .then((res) => {
     if(res && res.success) {
