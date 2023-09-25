@@ -15,8 +15,15 @@
 }
 .button {
     margin-bottom: 56px;
+    margin-top: 40px;
+    align-self: center;
 }
 .link {
     text-decoration: none;
     color: #4C4CFF;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
 }

@@ -17,6 +17,7 @@ export function ResetPasswordPage () {
    setValue({...value, [e.target.name] : e.target.value})
  }
  const submitForm = (e) => {
+    e.preventDefault();
     dispatch(resetPassword(value))
   }
   
@@ -31,11 +32,13 @@ export function ResetPasswordPage () {
     return (
         <div className={ResetPasswordPageStyles.page}>
             <h2 className={`${ResetPasswordPageStyles.title} text text_type_main-large`}>Восстановление пароля</h2>
+            <form className={ResetPasswordPageStyles.form} onSubmit={submitForm}>
             <PasswordInput onChange={onChange} value={value.password} name='password'/>
             <Input onChange={onChange} placeholder={'Введите код из письма'} value={value.token} name='token'/>
-            <Link  className={ResetPasswordPageStyles.button}>
-              <Button htmlType="button" onClick={() => submitForm()}>Сохранить</Button>
-            </Link>
+              <div className={ResetPasswordPageStyles.button}>
+              <Button htmlType="submit">Сохранить</Button>
+              </div>
+            </form>
             <p className={ `text text_type_main-default text_color_inactive`}>Вспомнили пароль? <Link to={{pathname:'/login'}} className={`${ResetPasswordPageStyles.link} `}>Войти</Link></p>
         </div>
     )

@@ -1,4 +1,4 @@
-import { ORDER_CHECKOUT_FAILED, ORDER_CHECKOUT_REQUEST, ORDER_CHECKOUT_SUCCESS } from "../actions/orderActions"
+import { ORDER_CHECKOUT_FAILED, ORDER_CHECKOUT_REQUEST, ORDER_CHECKOUT_SUCCESS, CLEAR_ORDER } from "../actions/orderActions"
 
 const initialState = {
     order: null,
@@ -32,6 +32,12 @@ export const orderReducer = (state = initialState, action) => {
                     orderCheckoutFailed: false,
                     orderCheckoutRequest: true,
                     order: action.order,
+                }
+            }
+            case CLEAR_ORDER: {
+                return {
+                    ...state,
+                    order: null
                 }
             }
       

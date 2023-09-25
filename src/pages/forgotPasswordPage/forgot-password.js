@@ -2,7 +2,6 @@ import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-comp
 import ForgotPasswordPageStyles from './forgotPasword.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 import React from 'react';
-/*import { useDispatch } from 'react-redux';*/
 import { forgotPasswordRequest } from '../../utils/api-burger';
 
 
@@ -11,13 +10,12 @@ export function ForgotPasswordPage() {
        email : '',
 })
 const navigate = useNavigate()
-/*const dispatch = useDispatch()*/
 const onChange = (e) => {
   setValue({...value, [e.target.name] : e.target.value})
 }
 
-const submitForm = (e) => {
-  /*dispatch(forgotPassword(value))*/
+const submitForm = (event) => {
+  event.preventDefault()
   forgotPasswordRequest(value)
   .then((res) => {
     if(res && res.success) {
@@ -35,10 +33,17 @@ const submitForm = (e) => {
     return(
     <div className={ForgotPasswordPageStyles.page}>
         <h2 className={`${ForgotPasswordPageStyles.title} text text_type_main-large`}>Восстановление пароля</h2>
+        
+        <form className={ForgotPasswordPageStyles.form} onSubmit={submitForm}>
         <EmailInput name='email' onChange={onChange} value={value.email}/>
-        <Link /*to={{pathname:"/reset-password"}}*/ className={ForgotPasswordPageStyles.button} >
-          <Button htmlType="button" onClick={submitForm}  >Восстановить</Button>
-        </Link>
+        <div className={ForgotPasswordPageStyles.button}>
+        <Button  htmlType="submit"   >Восстановить</Button>
+        </div>
+        
+          
+        
+        </form>
+        
         <p className={ `text text_type_main-default text_color_inactive`}>Вспомнили пароль? <Link to={{pathname:'/login'}} className={`${ForgotPasswordPageStyles.link} `}>Войти</Link></p>
 
     </div>

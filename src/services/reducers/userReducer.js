@@ -1,5 +1,5 @@
 import { GET_USER_REQUEST, GET_USER_FAILED, GET_USER_SUCCESS, REGISTRATION_SUCCESS, REGISTRATION_REQUEST, REGISTRATION_FAILED, AUTHORIZATION_REQEST,
-    AUTHORIZATION_FAILED, AUTHORIZATION_SUCCESS, FORGOT_PASSWORD, /*FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILED,*/ REFRESH_USERDATA_REQEST,
+    AUTHORIZATION_FAILED, AUTHORIZATION_SUCCESS, REFRESH_USERDATA_REQEST,
     REFRESH_USERDATA_FAILED, REFRESH_USERDATA_SUCCESS, RESET_PASSWORD, RESET_PASSWORD_FAILED, RESET_PASSWORD_SUCCESS,
     LOGOUT_SUCCESS, LOGOUT_FAILED, LOGOUT_REQUEST } from "../actions/userActions";
 
@@ -14,8 +14,6 @@ const initialState = {
     refreshToken: null,
     authRequest: false,
     authFailed: false,
-    /*forgotPasswordRequest: false,
-    forgotPasswordFailed: false,*/
     resetPasswordRequest: false,
     resetPasswordFailed: false,
     refreshUserDataRequest: false,
@@ -96,29 +94,7 @@ export const userReducer = (state = initialState, action) => {
             authFailed: true
         }
       }
-     /* case FORGOT_PASSWORD: {
-        return {
-          ...state,
-          forgotPasswordRequest: true,
-          forgotPasswordFailed: false,
-          
-        };
-      }
-      case FORGOT_PASSWORD_SUCCESS: {
-        return {
-          ...state,
-          forgotPasswordRequest: false,
-        
-        };
-      }
-      case FORGOT_PASSWORD_FAILED: {
-        return {
-          ...state,
-          forgotPasswordRequest: false,
-          forgotPasswordFailed: true,
-         
-        };
-      }*/
+
       case RESET_PASSWORD: {
         return {
           ...state,

@@ -1,4 +1,4 @@
-import { loginUser, registerUser, /*forgotPasswordRequest,*/ resetPasswordRequest, getUser,  logoutRequest, refreshTokenRequest, refreshUserDataRequest } from "../../utils/api-burger"
+import { loginUser, registerUser, resetPasswordRequest, getUser,  logoutRequest, refreshTokenRequest, refreshUserDataRequest } from "../../utils/api-burger"
 
 
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'
@@ -32,7 +32,9 @@ export const ISAUTHORIZATION_REQEST = 'ISAUTHORIZATION_REQEST'
 
 
 
+
 export const userRegistration = (value) => {
+
     return function(dispatch) {
         dispatch({
             type: REGISTRATION_REQUEST
@@ -44,6 +46,7 @@ export const userRegistration = (value) => {
                     type: REGISTRATION_SUCCESS,
                     
                 })
+
             } else {
                 dispatch({
                     type: REGISTRATION_FAILED
@@ -104,7 +107,8 @@ export const getUserData = () => {
             if(res && res.success) {
                  dispatch({
                      type: GET_USER_SUCCESS,
-                     user: res.user
+                     user: res.user,
+                     isAuth: true
                  })
             } else {
                 dispatch({
@@ -113,6 +117,7 @@ export const getUserData = () => {
             }
         })
         .catch(err => {
+            
             if (err === "Ошибка:403" || err ==='Ошибка:401') {
                 refreshTokenRequest()
                 .then((res) => {
@@ -128,27 +133,6 @@ export const getUserData = () => {
         })
     }
 }
-/*export const forgotPassword = (value) => {
-    return function(dispatch) {
-        dispatch({
-            type: FORGOT_PASSWORD
-        })
-        forgotPasswordRequest(value)
-        .then(res => {
-            if(res && res.success) {
-                localStorage.setItem('forgotPasswordSuccess', 'true')
-                dispatch({
-                    type: FORGOT_PASSWORD_SUCCESS
-                })
-            } else {
-                dispatch({
-                    type: FORGOT_PASSWORD_FAILED
-                })
-            }
-        })
-        
-    }
-}*/
 
 export const resetPassword = (value) => {
     return function(dispatch) {

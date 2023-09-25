@@ -1,4 +1,4 @@
-import { GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS, ADD_SELECTED_INGREDIENT, CHANGE_BUN, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS } from "../actions/ingredientsActions"
+import { CLEAR_CONSTRUCTOR, GET_INGREDIENTS_FAILED, GET_INGREDIENTS_REQUEST, GET_INGREDIENTS_SUCCESS, ADD_SELECTED_INGREDIENT, CHANGE_BUN, DELETE_SELECTED_INGREDIENT, SORT_SELECTED_INGREDIENTS } from "../actions/ingredientsActions"
 import uuid from 'react-uuid'
 
 const initialState = {
@@ -74,6 +74,15 @@ export const ingredientsReducer = (state = initialState, action) => {
                     addedIngredients: action.payload
                 }
     
+            }
+
+            case CLEAR_CONSTRUCTOR: {
+                return {
+                    ...state,
+                    addedIngredients: []
+              
+                    
+                }
             }
             default: {
                 return state

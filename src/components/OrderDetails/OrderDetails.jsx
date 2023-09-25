@@ -8,7 +8,8 @@ function OrderDetails () {
 
     return (
         <>
-        <h2 className={`${OrderDetailsStyles.title} text text_type_digits-large`}>{order}</h2>
+        {order ? <h2 className={`${OrderDetailsStyles.title} text text_type_digits-large`}>{order}</h2> : <h2 className={`text text_type_main-default`}>Ожидайте номер заказа...</h2>}
+        
         <p className={`${OrderDetailsStyles.subtitle} text text_type_main-medium`}>идентификатор заказа</p>
         <div className={OrderDetailsStyles.image}></div>
         <p className={`${OrderDetailsStyles.text} text text_type_main-default`}>Ваш заказ начали готовить</p>
