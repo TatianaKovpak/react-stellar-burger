@@ -2,7 +2,7 @@ import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burg
 import ResetPasswordPageStyles from './resetPassword.module.css'
 import { Link, Navigate,} from 'react-router-dom'
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/types/index';
 import { resetPassword } from '../../services/actions/userActions';
 import { FC } from "react";
 
@@ -17,7 +17,7 @@ export const ResetPasswordPage: FC = () => {
  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
    setValue({...value, [e.target.name] : e.target.value})
  }
- const submitForm = (e:React.SyntheticEvent) => {
+ const submitForm = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(resetPassword(value))
   }

@@ -2,7 +2,7 @@ import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-de
 import RegisterPageStyles from "./register.module.css"
 import { Link} from "react-router-dom";
 import { userRegistration } from "../../services/actions/userActions";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../services/types/index";
 import React from "react";
 import { FC } from "react";
 
@@ -19,7 +19,7 @@ export const RegisterPage: FC = () => {
         setValue({...value, [e.target.name] : e.target.value})
     }
 
-    const submitForm = (e: React.SyntheticEvent) => {
+    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         dispatch(userRegistration(value))
         

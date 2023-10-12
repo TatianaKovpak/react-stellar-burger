@@ -28,7 +28,7 @@ const Modal: FC <TModal> = ({isOpened, onClose, children}) => {
                     <button className={ModalStyles.close__icon} onClick={onClose}></button>   
                     {children}
                 </div>
-                <ModalOverlay active={isOpened}/>
+                <ModalOverlay active={isOpened} onClose={onClose}/>
             </>
     , modalRoot)
 }

@@ -20,7 +20,7 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setValue({...value, [e.target.name] : e.target.value})
 }
 
-const submitForm = (e: React.SyntheticEvent) => {
+const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   dispatch(userAuthorization(value))
   

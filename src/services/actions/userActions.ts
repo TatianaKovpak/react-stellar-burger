@@ -1,5 +1,5 @@
 import { loginUser, registerUser, resetPasswordRequest, getUser,  logoutRequest, refreshTokenRequest, refreshUserDataRequest } from "../../utils/api-burger"
-import { AppThunk, AppDispatch } from "../types"
+import { AppThunk } from "../types"
 import { TUser } from "../types/data"
 
 
@@ -111,7 +111,7 @@ IRegistrationSuccessAction | IAuthorizationRequestAction | IAuthorizationFailedA
 IForgotPasswordSuccessAction | IResetPasswordAction | IResetPasswordFailedAction | IResetPasswordSuccessAction | IRefreshUserDataAction | IRefreshUserDataSuccessAction |
 IRefreshUserDataFailedAction | ILogoutRequestAction | ILogoutSuccessAction | ILogoutFailedtAction | IIsAuthorizationRequestAction;
 
-export const userRegistration: AppThunk = (value) => (dispatch: AppDispatch) => {
+export const userRegistration: AppThunk = (value) => (dispatch) => {
 console.log(value)
         dispatch({
             type: REGISTRATION_REQUEST
@@ -138,7 +138,7 @@ console.log(value)
     
 }
 
-export const userAuthorization : AppThunk = (value) => (dispatch: AppDispatch) =>{
+export const userAuthorization : AppThunk = (value) => (dispatch) =>{
    
         dispatch({
             type: AUTHORIZATION_REQEST
@@ -173,7 +173,7 @@ export const userAuthorization : AppThunk = (value) => (dispatch: AppDispatch) =
 }
 
 
-export const getUserData : AppThunk = () => (dispatch: AppDispatch) => {
+export const getUserData : AppThunk = () => (dispatch) => {
     const accessToken = localStorage.getItem('accessToken')
         dispatch({
             type: GET_USER_REQUEST
@@ -214,7 +214,7 @@ export const getUserData : AppThunk = () => (dispatch: AppDispatch) => {
     
 }
 
-export const resetPassword: AppThunk = (value) => (dispatch: AppDispatch) => {
+export const resetPassword: AppThunk = (value) => (dispatch) => {
         dispatch({
             type: RESET_PASSWORD
         })
@@ -240,7 +240,7 @@ export const resetPassword: AppThunk = (value) => (dispatch: AppDispatch) => {
     
 }
 
-export const logoutAction: AppThunk = () => (dispatch: AppDispatch) => {
+export const logoutAction: AppThunk = () => (dispatch) => {
 
         dispatch({
             type: LOGOUT_REQUEST
@@ -267,7 +267,7 @@ export const logoutAction: AppThunk = () => (dispatch: AppDispatch) => {
         localStorage.clear()
 }
 
-export const refreshUserData: AppThunk = (form) => (dispatch: AppDispatch) => {
+export const refreshUserData: AppThunk = (form) => (dispatch) => {
     const accessToken = localStorage.getItem('accessToken')
         dispatch({
             type: REFRESH_USERDATA_REQEST

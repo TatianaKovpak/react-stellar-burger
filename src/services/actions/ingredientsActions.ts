@@ -1,6 +1,6 @@
 
 import { getIngredients } from "../../utils/api-burger";
-import { AppDispatch, AppThunk } from "../types";
+import {  AppThunk } from "../types";
 import {  TIngredient } from "../types/data";
 
 export const GET_INGREDIENTS_REQUEST: 'GET_INGREDIENTS_REQUEST' = 'GET_INGREDIENTS_REQUEST';
@@ -55,7 +55,7 @@ export interface IClearConstructorAction {
 export type TIngredientsActions = | IGetIngredientsAction | IGetIngredientsSuccessAction | IGetIngredientsFailedAction | IAddSelectedIngredientAction |
 IChangeBunActions | IDeleteSelectedIngredientAction | ISortSelectedIngredientAction | IClearConstructorAction
 
-export const getIngredientsFromServer : AppThunk = () => (dispatch:AppDispatch) => {
+export const getIngredientsFromServer : AppThunk = () => (dispatch) => {
      dispatch({
          type: GET_INGREDIENTS_REQUEST
      })

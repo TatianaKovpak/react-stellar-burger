@@ -1,6 +1,6 @@
 import { postOrder, refreshTokenRequest } from "../../utils/api-burger";
-import { AppDispatch, AppThunk } from "../types";
-import { TIngredient } from "../types/data";
+import {  AppThunk } from "../types";
+
 
 export const ORDER_CHECKOUT_REQUEST: 'ORDER_CHECKOUT_REQUEST' = 'ORDER_CHECKOUT_REQUEST';
 export const ORDER_CHECKOUT_FAILED: 'ORDER_CHECKOUT_FAILED' = 'ORDER_CHECKOUT_FAILED';
@@ -26,7 +26,7 @@ export interface IClearOrder {
 
 export type TOrderActions = | IOrderCheckoutRequest | IOrderCheckoutFailed | IOrderCheckoutSuccess | IClearOrder
 
-export const getOrderData: AppThunk = (arr: string[]) => (dispatch: AppDispatch) => {
+export const getOrderData: AppThunk = (arr: string[]) => (dispatch) => {
     const accessToken = localStorage.getItem('accessToken')
         dispatch ({
             type: ORDER_CHECKOUT_REQUEST,

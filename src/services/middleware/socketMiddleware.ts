@@ -1,5 +1,6 @@
 import {TWsConnectionActions, WS_CONNECTION_CLOSED, WS_CONNECTION_CONNECT, WS_CONNECTION_DISCONNECT, WS_CONNECTION_ERROR, WS_CONNECTION_OPEN, WS_CONNECTION_SUCCESS, WS_GET_MESSAGE } from "../actions/socketMiddlewareActions";
-import { MiddlewareAPI, Dispatch} from 'redux';
+import { MiddlewareAPI, Dispatch, Middleware} from 'redux';
+import { RootState, AppDispatch } from "../types";
 
 export type TSocketMiddlewareActions = {
     wsConnect: typeof WS_CONNECTION_CONNECT;
@@ -12,8 +13,8 @@ export type TSocketMiddlewareActions = {
 }
      
     
-export const socketMiddleware = (wsActions: TSocketMiddlewareActions ) => {
-    return (store: MiddlewareAPI) => {
+export const socketMiddleware = (wsActions: TSocketMiddlewareActions ): Middleware => {
+    return (store: MiddlewareAPI<AppDispatch, RootState>) => {
        
         let socket: WebSocket | null = null;
 

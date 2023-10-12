@@ -16,7 +16,7 @@ const onChange = ( e: React.ChangeEvent<HTMLInputElement>) => {
   setValue({...value, [e.target.name] : e.target.value})
 }
 
-const submitForm = (event: React.SyntheticEvent) => {
+const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
   forgotPasswordRequest(value)
   .then((res) => {

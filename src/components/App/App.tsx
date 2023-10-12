@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from '../../services/types/index'
 import { IngredientDetailsPage } from "../../pages/ingredientDetailsPage/ingredient-details";
 import { FeedPage } from "../../pages/feedPage/feed";
 import { CLOSE_MODAL, OPEN_MODAL_INGREDIENT, OPEN_MODAL_ORDER_DETAILS } from "../../services/actions/modalActions";
+import { CLEAR_CONSTRUCTOR } from "../../services/actions/ingredientsActions";
+import { CLEAR_ORDER } from "../../services/actions/orderActions";
 
 const App: FC = () => {
   const modal = useSelector(state => state.modal)
@@ -40,6 +42,16 @@ const App: FC = () => {
     dispatch({
         type: CLOSE_MODAL
     });
+    if(modal.isDetails) {
+      dispatch({
+          type: CLEAR_CONSTRUCTOR
+      })
+  
+      dispatch({
+          type: CLEAR_ORDER
+      })
+
+      }
    
 }
 

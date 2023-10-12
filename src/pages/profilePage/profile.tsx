@@ -52,7 +52,7 @@ const onChange = (e:React.ChangeEvent<HTMLInputElement>) => {
   setValue({...value, [e.target.name] : e.target.value})
 }
 
-const submitForm = (evt:React.SyntheticEvent) => {
+const submitForm = (evt:React.FormEvent<HTMLFormElement>) => {
   evt.preventDefault()
   dispatch(refreshUserData(value))
 }

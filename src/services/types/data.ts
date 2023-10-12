@@ -58,7 +58,9 @@ export type TModal = {
 }
 
 export type TOverlayModal = {
-  active: boolean
+  active: boolean,
+  onClose: (() => void);
+ 
 }
 
 export type TForm = {
