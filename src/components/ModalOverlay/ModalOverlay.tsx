@@ -14,33 +14,37 @@ const ModalOverlay : FC<TOverlayModal> = (active) => {
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
-
-function closePopup (evt: MouseEvent) {
-    const target = evt.target
-    if (target instanceof HTMLElement) {
-        if(/*evt.target && evt.target.*/ target.classList.contains(ModalOverlayStyles.overlay__active)) {
-
-            dispatch({
-                type: CLOSE_MODAL
-            })
-            if(modal.isDetails) {
-            dispatch({
-                type: CLEAR_CONSTRUCTOR
-            })
-           
-            dispatch({
-                type: CLEAR_ORDER
-            })
-
-            }
-          
-        } 
+    interface SyntheticEvent<T> {
+        currentTarget: EventTarget & T;
+        target : EventTarget & T;
     }
-    if(!modal.isDetails) {
-        navigate(-1)
 
+    function closePopup (evt: SyntheticEvent<EventTarget>) {
+        const target = evt.target
+        if (target instanceof HTMLElement) {
+            if(/*evt.target && evt.target.*/ target.classList.contains(ModalOverlayStyles.overlay__active)) {
+
+                dispatch({
+                    type: CLOSE_MODAL
+                })
+                if(modal.isDetails) {
+                dispatch({
+                    type: CLEAR_CONSTRUCTOR
+                })
+            
+                dispatch({
+                    type: CLEAR_ORDER
+                })
+
+                }
+            
+            } 
+        }
+        if(!modal.isDetails) {
+            navigate(-1)
+
+        }
     }
-}
  
     return (
         <div className={active ? ModalOverlayStyles.overlay__active : ModalOverlayStyles.overlay} onClick={closePopup}>

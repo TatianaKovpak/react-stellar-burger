@@ -29,8 +29,6 @@ export const FeedPage : FC = () => {
         ordersInProgress = allOrders.orders.filter(i => i.status === 'created')
     }
 
-    console.log(ordersDone, ordersInProgress)
-
     return (
         <> 
         {allOrders.orders &&

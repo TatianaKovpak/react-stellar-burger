@@ -11,7 +11,7 @@ interface IProtectedRouteElement {
   
 }
 export const ProtectedRouteElement: FC<IProtectedRouteElement> = ({ onlyUnAuth = false, element }) => {
-  console.log(element)
+
   const isAuthChecked = useSelector((state) => state.user.isAuth);
   
   

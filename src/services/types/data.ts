@@ -21,7 +21,7 @@ export type TIngredient = {
 
   export type TOrder = {
     createdAt: string;
-    ingredients: string[] ;
+    ingredients: string[] | TIngredient[] | null[] ;
     name: string;
     number: number;
     status: string;

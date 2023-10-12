@@ -6,7 +6,7 @@ import { TModal } from "../../services/types/data";
 
 
 const modalRoot: HTMLElement = document.getElementById('modals') as HTMLElement;
-console.log(modalRoot)
+
 const Modal: FC <TModal> = ({isOpened, onClose, children}) => {
     
     useEffect(() => {

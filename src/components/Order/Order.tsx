@@ -15,14 +15,12 @@ const Order: FC = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   
-  const orderIngredients:[string][] = []
+  const orderIngredients = []
   let ingredientsWithData = [
     [
         ingredientInitialState[0]
      ]
   ]
-
-  console.log(...allOrders.orders.map(i => i.ingredients))
 
   if(allOrders.orders) {
     orderIngredients.push(...allOrders.orders.map(i => i.ingredients ))
@@ -31,7 +29,7 @@ const Order: FC = () => {
   }
   if(orderIngredients.length > 0) {
     ingredientsWithData = orderIngredients.map(item => {
-      return item.map((item2: string) => {
+      return item.map((item2) => {
        return ingredients.filter(elem => item2 === elem._id)[0]
       })
     })
@@ -53,7 +51,8 @@ const Order: FC = () => {
     
             return (
               <div key={i.number}>
-              {!i.ingredients.includes(null) &&
+              {/* {!i.ingredients.includes(null) && */}
+              {i.ingredients.length &&
               <Link  to={location.pathname === '/feed'? {pathname:`/feed/:${i.number}`}:{pathname:`/profile/orders/:${i.number}`}} state={{ background: location }} className={orderStyles.link}  >
               <div className={orderStyles.order} onClick={() => openPopup() }>
                 <div className={orderStyles.order__info}>

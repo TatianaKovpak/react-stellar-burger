@@ -17,10 +17,10 @@ const  BurgerIngredients: FC = () => {
     // function useRef<T>(initialValue: T|null): RefObject<T>
  
     
-    const refOfTab = useRef<HTMLDivElement>(null)
-    const refOfBun= useRef<HTMLHeadingElement | null>(null)
-    const refOfSauce = useRef<HTMLHeadingElement | null>(null)
-    const refOfMain = useRef<HTMLHeadingElement | null>(null)
+    const refOfTab = useRef<HTMLDivElement>(null) as React.MutableRefObject<HTMLDivElement>
+    const refOfBun= useRef<HTMLHeadingElement | null>(null) as React.MutableRefObject<HTMLHeadingElement>
+    const refOfSauce = useRef<HTMLHeadingElement | null>(null) as React.MutableRefObject<HTMLHeadingElement>
+    const refOfMain = useRef<HTMLHeadingElement | null>(null) as React.MutableRefObject<HTMLHeadingElement>
     
     type TRef  = {
       current:  HTMLHeadingElement 

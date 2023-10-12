@@ -5,7 +5,7 @@ import orderDetailsPageStyles from './orderDetailsPage.module.css'
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { connect, disconnect } from "../../services/actions/socketMiddlewareActions";
 import { FC } from "react";
-import { TIngredient, TOrders, TOrder } from "../../services/types/data";
+import { TIngredient, TOrder } from "../../services/types/data";
 
 
 export const ingredientInitialState: TIngredient[] = [
@@ -65,14 +65,14 @@ export const OrderDetailsPage: FC = () => {
         _id: ''
     }
     
-    let ingredientsWithData = ingredientInitialState
+    let ingredientsWithData: TIngredient[] = ingredientInitialState
     let uniqueIngredients: TIngredient[] = []
     let totalPrice: number = 0
     
   
     
      if(allOrders.orders.length > 0 ) {
-        openedOrder =  allOrders.orders.find(i => i.number === number)
+        openedOrder =  allOrders.orders.filter(i => i.number === number)[0]
 
        if(openedOrder) {
           ingredientsWithData = openedOrder.ingredients.map(item => {
@@ -84,7 +84,7 @@ export const OrderDetailsPage: FC = () => {
          
          totalPrice = ingredientsWithData.reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price  ,0)
 
-        uniqueIngredients = ingredientsWithData.reduce((acc, item) => {
+        uniqueIngredients = ingredientsWithData.reduce((acc: any, item) => {
             if (acc.includes(item)) {
                 return acc
             }
@@ -92,7 +92,8 @@ export const OrderDetailsPage: FC = () => {
         }, []) 
         
      }
-     console.log(openedOrder)
+
+    
     return (
         <div className={orderDetailsPageStyles.page}>
         {allOrders.orders && ingredients.length && openedOrder &&
@@ -103,7 +104,7 @@ export const OrderDetailsPage: FC = () => {
                 {openedOrder.status === 'done' ? 'Выполнен' : openedOrder.status === 'created' ? 'Готовится' : 'Отменен' }</p>
             <h3 className={`text text_type_main-default ${orderDetailsPageStyles.order__compound_title}`}>Состав:</h3>
             <div className={`custom-scroll ${orderDetailsPageStyles.ingredients}`}>
-                {uniqueIngredients && uniqueIngredients.map((i,index) => {
+                {uniqueIngredients && uniqueIngredients.map((i: TIngredient, index: number) => {
                      return(
                         <div key={i._id + index} className={orderDetailsPageStyles.ingredient}> 
                             <div className={orderDetailsPageStyles.ingredient__image_background}>

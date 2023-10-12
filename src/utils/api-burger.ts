@@ -4,7 +4,7 @@ const url = 'https://norma.nomoreparties.space/api';
 const token = localStorage.getItem("refreshToken")
 
 function checkResponse(res: Response) {  
- console.log(res)
+
     if (res.ok) {
     return res.json();
   }
