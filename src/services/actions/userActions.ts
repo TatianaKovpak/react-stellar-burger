@@ -112,7 +112,7 @@ IForgotPasswordSuccessAction | IResetPasswordAction | IResetPasswordFailedAction
 IRefreshUserDataFailedAction | ILogoutRequestAction | ILogoutSuccessAction | ILogoutFailedtAction | IIsAuthorizationRequestAction;
 
 export const userRegistration: AppThunk = (value) => (dispatch: AppDispatch) => {
-
+console.log(value)
         dispatch({
             type: REGISTRATION_REQUEST
         })
@@ -178,7 +178,9 @@ export const getUserData : AppThunk = () => (dispatch: AppDispatch) => {
         dispatch({
             type: GET_USER_REQUEST
         })
-        getUser(accessToken)
+        if(accessToken) {
+            getUser(accessToken)
+
         .then(res => {
             if(res && res.success) {
                  dispatch({
@@ -208,6 +210,7 @@ export const getUserData : AppThunk = () => (dispatch: AppDispatch) => {
                 })
             }
         })
+    }
     
 }
 
@@ -269,6 +272,7 @@ export const refreshUserData: AppThunk = (form) => (dispatch: AppDispatch) => {
         dispatch({
             type: REFRESH_USERDATA_REQEST
         })
+        if(accessToken) {
         refreshUserDataRequest(accessToken, form)
         .then((res) => {
             if(res && res.success) {
@@ -298,4 +302,5 @@ export const refreshUserData: AppThunk = (form) => (dispatch: AppDispatch) => {
                 })
             }
         })
+    }
 }

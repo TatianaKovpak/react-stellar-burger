@@ -26,11 +26,12 @@ export interface IClearOrder {
 
 export type TOrderActions = | IOrderCheckoutRequest | IOrderCheckoutFailed | IOrderCheckoutSuccess | IClearOrder
 
-export const getOrderData: AppThunk = (arr: TIngredient[]) => (dispatch: AppDispatch) => {
+export const getOrderData: AppThunk = (arr: string[]) => (dispatch: AppDispatch) => {
     const accessToken = localStorage.getItem('accessToken')
         dispatch ({
             type: ORDER_CHECKOUT_REQUEST,
         })
+        if(accessToken) {
         postOrder(arr, accessToken)
         .then(res => {
             if(res && res.success) {
@@ -62,6 +63,7 @@ export const getOrderData: AppThunk = (arr: TIngredient[]) => (dispatch: AppDisp
             }
            
         })
+    }
         
     
 }

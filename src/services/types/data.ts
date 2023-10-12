@@ -21,7 +21,7 @@ export type TIngredient = {
 
   export type TOrder = {
     createdAt: string;
-    ingredients: string[] | TIngredient[] ;
+    ingredients: string[] ;
     name: string;
     number: number;
     status: string;
@@ -59,4 +59,12 @@ export type TModal = {
 
 export type TOverlayModal = {
   active: boolean
+}
+
+export type TForm = {
+  email?: string;
+  name?: string;
+  password?: string;
+  token?: string
+
 }

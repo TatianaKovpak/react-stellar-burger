@@ -5,33 +5,39 @@ import { Link, To, useLocation } from 'react-router-dom';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from "prop-types";
 import { OPEN_MODAL_ORDER_DETAILS } from '../../services/actions/modalActions';
-import { TIngredient, TOrder } from '../../services/types/data';
+import { ingredientInitialState } from '../../pages/orderDetailsPage/orderDetailsPage';
+import { TIngredient } from '../../services/types/data';
+
 
 const Order: FC = () => {
   const allOrders = useSelector((state) => state.orders.allOrders)
   const ingredients = useSelector((state) => state.ingredients.ingredients)
   const dispatch = useDispatch()
   const location = useLocation()
+  
+  const orderIngredients:[string][] = []
+  let ingredientsWithData = [
+    [
+        ingredientInitialState[0]
+     ]
+  ]
 
-  const orderIngredients = []
-  let ingredientsWithData = []
+  console.log(...allOrders.orders.map(i => i.ingredients))
 
   if(allOrders.orders) {
-    orderIngredients.push(...allOrders.orders.map(i =>  i.ingredients ))
+    orderIngredients.push(...allOrders.orders.map(i => i.ingredients ))
     
     
   }
   if(orderIngredients.length > 0) {
     ingredientsWithData = orderIngredients.map(item => {
-    
       return item.map((item2: string) => {
        return ingredients.filter(elem => item2 === elem._id)[0]
       })
     })
 
   }
-  
-  
+
 
   function openPopup () {
     dispatch({
@@ -57,7 +63,7 @@ const Order: FC = () => {
               <h2>{i.name}</h2>
               <ul className={orderStyles.images}>
               
-                { ingredientsWithData.length && ingredientsWithData[index].map((item, index, arr) => { 
+                { ingredientsWithData.length > 1 && ingredientsWithData[index].map((item, index, arr) => { 
                   
                   const deletedElemArr = arr.length - 5
                        return (
@@ -70,7 +76,6 @@ const Order: FC = () => {
                              <img  src={item.image} alt={item.name}  className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`}/>
                              <p className={`text text_type_digits-default ${index === 5 ? orderStyles.count__visible : orderStyles.count}`}>{`+${deletedElemArr}`}</p>
                          </div>
-                          
                           :
                             <div  className={orderStyles.image} > 
                                 <img  src={item.image} alt={item.name} key={item._id + index + i.number} className={`${orderStyles.img}  ${index === 5 && arr.length > 6 ? orderStyles.img__last : ''}`} />

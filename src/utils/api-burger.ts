@@ -1,8 +1,10 @@
+import { TForm } from "../services/types/data";
+
 const url = 'https://norma.nomoreparties.space/api';
 const token = localStorage.getItem("refreshToken")
 
-function checkResponse(res) {  
- 
+function checkResponse(res: Response) {  
+ console.log(res)
     if (res.ok) {
     return res.json();
   }
@@ -14,7 +16,7 @@ export function getIngredients () {
     .then(checkResponse)
 }
 
-export function postOrder (arr, token) {
+export function postOrder (arr: string[], token: string) {
   return fetch((`${url}/orders`), {
     headers: {
       'Accept': 'application/json',
@@ -28,7 +30,7 @@ export function postOrder (arr, token) {
   
 }
 
-export function forgotPasswordRequest (value) {
+export function forgotPasswordRequest (value: TForm) {
   return fetch((`${url}/password-reset`), {
     headers: {
       'Accept': 'application/json',
@@ -41,7 +43,7 @@ export function forgotPasswordRequest (value) {
   
 }
 
-export function resetPasswordRequest (value) {
+export function resetPasswordRequest (value: TForm) {
   return fetch((`${url}/password-reset/reset`), {
     headers: {
       'Accept': 'application/json',
@@ -55,7 +57,7 @@ export function resetPasswordRequest (value) {
 }
 
 
-export function registerUser(form) {
+export function registerUser(form: TForm) {
   return fetch((`${url}/auth/register`), {
     headers: {
       'Accept': 'application/json',
@@ -68,7 +70,7 @@ export function registerUser(form) {
   
 }
 
-export function loginUser(form) {
+export function loginUser(form: TForm) {
   return fetch((`${url}/auth/login`), {
     headers: {
       'Accept': 'application/json',
@@ -82,7 +84,7 @@ export function loginUser(form) {
   
 }
 
-export const getUser = (token) => {
+export const getUser = (token: string) => {
 
   return fetch ((`${url}/auth/user`), {
     headers: {
@@ -109,7 +111,7 @@ export const refreshTokenRequest = () => {
  
 };
 
-export const refreshUserDataRequest = (token, form) => {
+export const refreshUserDataRequest = (token: string, form: TForm) => {
   return fetch((`${url}/auth/user`), {
     method: 'PATCH',
     headers: {

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector} from "../../services/types/index";
 import { useParams, useLocation } from "react-router-dom";
-import  { useEffect } from 'react';
+import { useEffect } from 'react';
 import orderDetailsPageStyles from './orderDetailsPage.module.css'
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { connect, disconnect } from "../../services/actions/socketMiddlewareActions";
@@ -8,7 +8,7 @@ import { FC } from "react";
 import { TIngredient, TOrders, TOrder } from "../../services/types/data";
 
 
-const ingredientInitialState = [
+export const ingredientInitialState: TIngredient[] = [
     {
         _id: '',
         name: '',
@@ -23,14 +23,13 @@ const ingredientInitialState = [
         image_large: '',
         __v: 0,
     }
-
 ]
 
 
 export const OrderDetailsPage: FC = () => {
     const allOrders = useSelector((state) => state.orders.allOrders)
     const ingredients = useSelector((state) => state.ingredients.ingredients)
-    console.log(ingredients)
+
     const dispatch = useDispatch()
     const location = useLocation()
     const token = localStorage.getItem('accessToken')
@@ -56,9 +55,9 @@ export const OrderDetailsPage: FC = () => {
     const background = location.state && location.state.background; 
     
    
-    let openedOrder: TOrder = {
+    let openedOrder: TOrder  = {
         createdAt: '',
-        ingredients: ingredientInitialState,
+        ingredients: [],
         name: '',
         number: 0,
         status: '',
@@ -66,21 +65,21 @@ export const OrderDetailsPage: FC = () => {
         _id: ''
     }
     
-    let ingredientsWithData: TIngredient[] = ingredientInitialState
+    let ingredientsWithData = ingredientInitialState
     let uniqueIngredients: TIngredient[] = []
     let totalPrice: number = 0
     
-    console.log(uniqueIngredients)
   
     
      if(allOrders.orders.length > 0 ) {
-        console.log(openedOrder)
         openedOrder =  allOrders.orders.find(i => i.number === number)
-       
 
-        ingredientsWithData = openedOrder.ingredients.map(item => {
-            return ingredients.filter(elem => item === elem._id)[0]
-         })
+       if(openedOrder) {
+          ingredientsWithData = openedOrder.ingredients.map(item => {
+              return ingredients.filter(elem => item === elem._id)[0]
+           })
+       }
+        
          const buns = ingredientsWithData.filter(i => i.type === 'bun')
          
          totalPrice = ingredientsWithData.reduce((acc, item) => item.type === 'bun' && buns.length < 2 ?  acc + (item.price * 2) : acc + item.price  ,0)
@@ -93,10 +92,10 @@ export const OrderDetailsPage: FC = () => {
         }, []) 
         
      }
-     console.log(ingredientsWithData)
+     console.log(openedOrder)
     return (
         <div className={orderDetailsPageStyles.page}>
-        {allOrders.orders && ingredients.length &&
+        {allOrders.orders && ingredients.length && openedOrder &&
         <div className={background ? orderDetailsPageStyles.order__modal : orderDetailsPageStyles.order}>
             <p className={` text text_type_digits-default ${background ? orderDetailsPageStyles.order__number_modal : orderDetailsPageStyles.order__number}`}>{`#${openedOrder.number}`}</p>
             <h2 className={`text text_type_main-medium ${orderDetailsPageStyles.title}`}>{openedOrder.name}</h2>

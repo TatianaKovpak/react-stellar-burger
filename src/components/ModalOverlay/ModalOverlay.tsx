@@ -17,10 +17,8 @@ const ModalOverlay : FC<TOverlayModal> = (active) => {
 
 function closePopup (evt: MouseEvent) {
     const target = evt.target
-    console.log(target)
     if (target instanceof HTMLElement) {
-        const classList = target.classList;
-        if(/*evt.target && evt.target.*/ classList.contains(ModalOverlayStyles.overlay__active)) {
+        if(/*evt.target && evt.target.*/ target.classList.contains(ModalOverlayStyles.overlay__active)) {
 
             dispatch({
                 type: CLOSE_MODAL
@@ -43,10 +41,6 @@ function closePopup (evt: MouseEvent) {
 
     }
 }
-
-
-
-
  
     return (
         <div className={active ? ModalOverlayStyles.overlay__active : ModalOverlayStyles.overlay} onClick={closePopup}>
